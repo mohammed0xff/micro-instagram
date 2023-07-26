@@ -109,3 +109,40 @@ Having said that, let's look at some initial microservices we could consider bas
 Each of these entities could be a separate microservice with its own database and business logic. They would communicate with each other via APIs to perform the required operations.
 
 Remember, this is just a starting point. As we get to know more about our application's requirements and our users' needs, we can refine this list. The beauty of a microservices architecture is its flexibility, which allows us to adapt our application as it evolves, ensuring we can continuously deliver a scalable, and efficient service.
+
+-- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- 
+
+## The How - Asking quesions
+
+The very first step in building a microservices architecture is to gain a perspective of the big picture of a fully working application. We have a set of services, each of which is a piece of software responsible for a set of tasks and has its data access. The question we need to ask ourselves is how will these separate services result in a seamless working application? Do they have to communicate?
+
+The answer is yes. Each service should be able to listen and process every action that relates to its functionality and produce or announce actions that are out of its hand for other services to handle.
+
+- There are two types of comunications :
+Synchronous or Asynchronous communication methods are the two main types of communication methods, and each has its benefits and drawbacks. 
+* Synchronous communication involves making HTTP requests to other services
+* Asynchronous communication involves using message queues or publish-subscribe mechanisms to send messages between services.
+
+Remember we always want to ask the question first before jumping on solutions. 
+keeping an image of what's going on in the back of your mind and filling gaps in it one step at a time.
+
+Great job on your tutorial! Here's a suggestion to finalize the text:
+
+When building a microservices architecture, it's important to consider how and what the services will communicate. Let's consider our instagram-like application, 
+for example : When someone follows you on instagram, the `User Service` creates a follow between you and the follower. The `Notification Service` then sends you a notification about the new follow.
+
+To enable this communication, the `User Service` could send a synchronous HTTP request to the Notification Service or use asynchronous communication using a message queue. If the action of follow only concerns the `Notification Service`, a synchronous HTTP request would be a fine choice. However, if the follow concerns not just the `Notification Service` but more than one service, like the Feed Service, it's better to use a publish-subscribe mechanism with a message bus like RabbitMQ or Apache Kafka.
+
+Also using synchronous communication may not always be the best solution. For example, when the User Service creates a follow between two users, it doesn't need to wait for the Notification Service to send the notification. Therefore, using synchronous communication in this case would add unnecessary latency. Instead, using asynchronous communication with a message queue allows the `User Service` to continue with its job, while the Notification Service processes the event in the background and sends the notification when it's ready. This approach improves the performance and scalability of the application.
+We will explore other use cases of synchronous communications later in this tutorial.
+
+On the other hand, message buses are a beautiful solution because they allow you to publish an event whenever something happens. Whoever needs to handle that event can subscribe to it and respond accordingly. This approach provides a scalable solution and helps to decouple services, making it easier to maintain and modify the application over time.
+
+in the next seciton we are going to explore RabbitMQ.
+
+-- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- 
+
+## Message Bus - RabbitMQ 
+
+
+
