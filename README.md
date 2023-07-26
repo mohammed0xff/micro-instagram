@@ -61,3 +61,51 @@ While a monolithic architecture might seem simpler at first, as the application 
 In the following sections, we'll delve deeper into these advantages and explore how we can leverage them to build our Instagram-like application.
 
 
+-- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- 
+
+## The How - Dissecting instagram and identifying key entities:
+
+When considering how to design an application, I like to think about the entities involved. What are they? What actions can they perform? How do they interact with each other?
+
+In the case of Instagram, the first entity we encounter is the user. Yes, you! While we're developers, we're also users of the applications we build. So, what can a user do? Here's a list of Instagram user actions that directly cause a change in the application:
+
+* Create Account
+* Follow / Unfollow
+* Post Content
+* Comment / Like
+* Share Stories
+* Send Direct Messages
+
+
+By considering the actions of one entity, you start to see other entities and their relationships. For example, posting content introduces the 'Post' entity. Commenting or liking introduces 'Comments' and 'Likes' entities, and so on.
+
+We can create an exhaustive list for each entity like this. 
+
+- **User**: The central entity in the application. A user can perform actions like follow another user, create a post, post a story, like a story, send a message, and receive notifications.
+- **Post**: An entity representing content shared by a user. A user can create a post, which then becomes part of their profile and appears in the feeds of their followers.
+- **Follow**: A relationship entity that represents a user's interest in another user's content. When a user follows another, the follower's feed updates to include the followed user's posts.
+- **Story**: This is a type of post that a user can create. It's temporary and disappears after 24 hours. Other users can view and like the story.
+- **Profile**: This entity represents a user's identity on the platform, including their shared posts, bio, and profile picture. A user can edit their profile and it can be viewed by other users.
+- **Notification**: This is a system-generated entity that alerts users to activity related to their account, such as a new follower, a like on teir post, or a new message.
+- **Message**: An entity representing a private communication between users. A user can send a message to another user, and these messages are stored in a private thread.
+
+Each of these entities has different actions associated with it, and these actions often involve interactions between multiple entities. For example, when a user (entity 1) likes a post (entity 2), it can generate a notification (entity 3) for the post's owner. This interconnectedness is part of what makes the application dynamic.
+
+But you might wonder, "Are we creating a microservice for each entity?" Not exactly. While these entities guide us, they don't dictate a one-to-one mapping to microservices. However, considering these entities gives us a clear view of the internal workings of the application, highlighting areas of cohesion and separation.
+
+It's a bit like designing a database, which also involves identifying entities and their relationships. But while database entities are static, application entities like those in Instagram are dynamic and perform actions. In a database, foreign keys might indicate dependencies, but applications have many more facets to consider.
+
+Having said that, let's look at some initial microservices we could consider based on these entities:
+
+1. User Service: Handles user-related operations such as account creation, authentication, profile management, data privacy settings, and managing relationships between users (following and unfollowing).
+2. Profile microservice: This microservice would manage user profiles, including the ability to view and edit profiles, as well as user-generated content such as photos and videos.
+3. Feed microservice: This microservice would handle the display of content on the user's feed, including the ability to like, comment, and share posts.
+4. Search microservice: This microservice would handle search functionality, allowing users to search for other users, hashtags, and content.
+5. Notification microservice: This microservice would handle notifications, such as likes, comments, and direct messages.
+6. Messaging microservice: This microservice would handle direct messaging functionality between users.
+7. Analytics microservice: This microservice would handle tracking and reporting on usage and engagement metrics, such as likes, comments, and views.
+8. Payment microservice: This microservice would handle payment processing for features such as sponsored content and advertising.
+
+Each of these entities could be a separate microservice with its own database and business logic. They would communicate with each other via APIs to perform the required operations.
+
+Remember, this is just a starting point. As we get to know more about our application's requirements and our users' needs, we can refine this list. The beauty of a microservices architecture is its flexibility, which allows us to adapt our application as it evolves, ensuring we can continuously deliver a scalable, and efficient service.
