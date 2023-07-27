@@ -89,6 +89,9 @@ We can create an exhaustive list for each entity like this.
 - **Notification**: This is a system-generated entity that alerts users to activity related to their account, such as a new follower, a like on teir post, or a new message.
 - **Message**: An entity representing a private communication between users. A user can send a message to another user, and these messages are stored in a private thread.
 
+And to make this text a bit visual i made this diagram : 
+![](https://github.com/mohammed0xff/micro-instagram/blob/master/images/entities.png)
+
 Each of these entities has different actions associated with it, and these actions often involve interactions between multiple entities. For example, when a user (entity 1) likes a post (entity 2), it can generate a notification (entity 3) for the post's owner. This interconnectedness is part of what makes the application dynamic.
 
 But you might wonder, "Are we creating a microservice for each entity?" Not exactly. While these entities guide us, they don't dictate a one-to-one mapping to microservices. However, considering these entities gives us a clear view of the internal workings of the application, highlighting areas of cohesion and separation.
