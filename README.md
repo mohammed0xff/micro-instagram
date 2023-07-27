@@ -90,7 +90,12 @@ We can create an exhaustive list for each entity like this.
 - **Message**: An entity representing a private communication between users. A user can send a message to another user, and these messages are stored in a private thread.
 
 And to make this text a bit visual i made this diagram : 
-![](https://github.com/mohammed0xff/micro-instagram/blob/master/images/entities.png)
+
+<p align="center">
+  <img src="https://github.com/mohammed0xff/micro-instagram/blob/master/images/entities.png" width="700" />
+</p>
+
+![]()
 
 Each of these entities has different actions associated with it, and these actions often involve interactions between multiple entities. For example, when a user (entity 1) likes a post (entity 2), it can generate a notification (entity 3) for the post's owner. This interconnectedness is part of what makes the application dynamic.
 
@@ -145,7 +150,34 @@ in the next seciton we are going to explore RabbitMQ.
 
 -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- 
 
-## Message Bus - RabbitMQ 
+## Message Bus - RabbitMQ
 
+Every software or technology that exists is intended to solve a specific problem. As developers, our objective is to learn how to utilize these technologies in order to create practical solutions for the real world. It is crucial for us to constantly remind ourselves of the question: "Why does this technology exist?" shifting our minds back to the actual problem that the technology is designed to address, and starting from there.
+
+So, what is the problem here? yes, we have two services that want to comunicate together asynchronusly.
+consider this example. Me (service one, producer) wanna tell you (service two, consumer) something (and im not very urgent) but you might be busy. So, i write it down and leave it on your desk.
+So, you can read the message whenever you finish your current task.
+
+And this is basically it that's what rabbit mq is, in a nut shell 
+but what if we have one than more service that want to comunicate ?
+
+If there are more than two services that need to communicate, that's we they created "Queues" as a centralized and standardized way of exchanging messages. Each service can publish messages to one or more queues, and each consumer can subscribe to the queues it needs to receive messages from. This enables decoupling of producers and consumers, allowing messages to be sent and processed asynchronously.
+
+#### What are queues ?
+
+Queues in RabbitMQ are the basic building blocks for messaging in the RabbitMQ message broker system.
+A queue is an ordered list of messages. When a sender (publisher) send a message, it gets delivered to a specific queue. Multible receivers (consumers) can then subscribe to the queue and receive messages from it. 
+Queues enable decoupling of producers and consumers, allowing messages to be sent and processed asynchronously, improving scalability and fault in distributed systems.
+
+So, the queue acts as a middle point between services. It serves as a communication channel between services, even if they are not aware of each other. When a service wants to communicate something, it refers to the specific queue (or pattern, as we will explain later) it should send the message to. Similarly, if a service is waiting for events to occur, it knows which queues it should receive or consume messages from.
+
+Now, let's explore RabbitMQ and see a real-life scenario. We will play the role of both ends - the publisher and the consumer - and observe the perspective from each side.
+
+#### As a publisher 
+
+
+#### As a consumer
+
+-- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- --
 
 
