@@ -17,11 +17,23 @@ namespace NotificationService.DBContext
             // Configure Notifications entity
             modelBuilder.Entity<Notification>(entity =>
             {
-                entity.HasKey(e => e.Id);
-                entity.Property(e => e.Message)
-                .HasMaxLength(120)
-                .IsRequired();
-                entity.HasAlternateKey(e => new {e.SenderId, e.ReceiverId});
+                entity.HasKey(n => n.Id);
+
+                entity.Property(n => n.SenderId)
+                    .IsRequired();
+
+                entity.Property(n => n.ReceiverId)
+                    .IsRequired();
+
+                entity.Property(n => n.Message)
+                    .IsRequired()
+                    .HasMaxLength(500);
+
+                entity.Property(n => n.CreatedAt)
+                    .IsRequired();
+
+                entity.HasIndex(n => n.ReadAt);
+
                 entity.ToTable("Notifications");
             });
         }
