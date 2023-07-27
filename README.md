@@ -95,7 +95,6 @@ And to make this text a bit visual i made this diagram :
   <img src="https://github.com/mohammed0xff/micro-instagram/blob/master/images/entities.png" width="700" />
 </p>
 
-![]()
 
 Each of these entities has different actions associated with it, and these actions often involve interactions between multiple entities. For example, when a user (entity 1) likes a post (entity 2), it can generate a notification (entity 3) for the post's owner. This interconnectedness is part of what makes the application dynamic.
 
@@ -163,7 +162,7 @@ but what if we have one than more service that want to comunicate ?
 
 If there are more than two services that need to communicate, that's we they created "Queues" as a centralized and standardized way of exchanging messages. Each service can publish messages to one or more queues, and each consumer can subscribe to the queues it needs to receive messages from. This enables decoupling of producers and consumers, allowing messages to be sent and processed asynchronously.
 
-#### What are queues ?
+### What are queues ?
 
 Queues in RabbitMQ are the basic building blocks for messaging in the RabbitMQ message broker system.
 A queue is an ordered list of messages. When a sender (publisher) send a message, it gets delivered to a specific queue. Multible receivers (consumers) can then subscribe to the queue and receive messages from it. 
@@ -173,10 +172,75 @@ So, the queue acts as a middle point between services. It serves as a communicat
 
 Now, let's explore RabbitMQ and see a real-life scenario. We will play the role of both ends - the publisher and the consumer - and observe the perspective from each side.
 
-#### As a publisher 
+But before doing so, lets take a look at the internal workings of RabbitMQ by asking some questions.
+
+#### Will each publisher announce the list of queues that its wants the message to be mapped to ?
+
+No, RabbitMQ features a very cool concept which is called "an Exchange" Exchanges : are the entities responsible for receiving messages from publisher and routing them to one or more queues based on specific rules. RabbitMQ supports four types of exchanges: direct, fanout, topic, and headers. we are going to explore each one in a sec.
+
+#### How to use exchanges and how does they know about the queues that exist ?
+
+First, you need to create an exchange and specify its type. RabbitMQ supports four types of exchanges: direct, fanout, topic, and headers. Each exchange type has different routing rules and is suitable for different use cases.
+
+Once you have created an exchange, you can bind it to one or more queues. This is done by creating a binding between the exchange and the queue. Bindings specify the routing rules for messages to be delivered from the exchange to the queue. When a message is sent to the exchange, RabbitMQ uses the routing rules specified by the bindings to determine which queues the message should be delivered to.
+
+Exchanges do not know about the queues that exist in RabbitMQ. Instead, bindings are used to connect the exchange to specific queues. When a binding is created, it specifies the name of the queue that the exchange should route messages to. The queue must already exist in RabbitMQ for the binding to be created.
+
+#### a Binding ?
+
+In RabbitMQ, a binding is a link between an exchange and a queue. Bindings define the routing rules for messages to be delivered from the exchange to the queue. When a message is published to an exchange, the exchange uses the bindings to determine which queues the message should be routed to.
+
+Bindings are created using a routing key, which is a string that specifies the routing criteria for a message. The routing key is used by the exchange to decide which queues to deliver the message to. The routing key can be any string, and its format depends on the exchange type.
+
+There are four types of exchanges in RabbitMQ:
+
+1. Direct exchange: Messages are delivered to queues based on a matching routing key. The routing key specified in the binding must exactly match the routing key used by the producer.
+
+2. Fanout exchange: Messages are delivered to all queues that are bound to the exchange. The routing key specified in the binding is ignored.
+
+3. Topic exchange: Messages are delivered to queues based on a matching pattern. The routing key specified in the binding can contain wildcards to match multiple routing keys.
+
+4. Headers exchange: Messages are delivered to queues based on a set of header values. The routing key specified in the binding is ignored.
+
+To use bindings in RabbitMQ, you need to create an exchange, create one or more queues, and then create a binding between the exchange and the queue. When creating a binding, you need to specify the routing key and any other options that are specific to the exchange type.
+
+#### a Routing key ?
+
+Routing keys are used by exchanges to determine how to route messages to queues. Routing keys are strings that are included with each message that is published to an exchange. The routing key is used by the exchange to determine which queues the message should be delivered to.
+
+The format of the routing key depends on the type of exchange that is being used. For direct and topic exchanges, the routing key is a string that is matched against the routing criteria specified in the exchange bindings. 
+
+- For fanout exchanges, the routing key is ignored.
+- For direct exchanges, the routing key must match exactly with the routing key specified in the binding for the message to be delivered to the queue. For example, if the binding specifies a routing key of "my_routing_key", then a message published with the routing key "my_routing_key" will be delivered to the queue, but a message published with the routing key "another_routing_key" will not.
+
+- For topic exchanges, the routing key is a string that can contain one or more words separated by dots, such as "my.routing.key". the words in the routing key are used to match against the routing patterns specified in the exchange bindings using special wildcard characters. the two wildcard characters that are supported are:
+
+(star) * : Matches exactly one word in the routing key.
+(hash) # : Matches zero or more words in the routing key.
+
+For example, if an exchange binding specifies a routing pattern of "my.#.key", then a message published with the routing key "my.routing.key" or "my.very.long.routing.key" will be delivered to the queue, but a message published with the routing key "another.routing.key" will not.
+
+Routing keys allow messages to be selectively delivered to specific queues based on the routing criteria specified in the exchange bindings. This provides a flexible and powerful mechanism for building complex messaging systems.
+
+Enough theory, let's take an exmple.
+
+Remember last time when you followed another user on instagram? 
+
+What did happen behind the scenes?
+
+-> You clicked a button 
+-> The web client sends a POST request to the server on the endpoint /users/follow/{your-friend}.
+-> The `User Service` receives the request and creates a follow relationship between you and the other user.
+-> The `User Service` publishes an event to RabbitMQ indicating that a new follow relationship has been created.
+-> The `Notification Service` consumes the event from RabbitMQ and creates a new notification indicating that you have followed the other user
+-> The `Notification Service` sends the notification to your friend telling them that now they are followed by you.
+
+That's not be what excatly the case on real instagram, but it is with ours.
+
+#### `User Service` As a publisher 
 
 
-#### As a consumer
+#### `Notification Service` As a consumer 
 
 -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- --
 
