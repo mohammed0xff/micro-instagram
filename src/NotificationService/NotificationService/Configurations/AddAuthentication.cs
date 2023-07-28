@@ -21,7 +21,6 @@ namespace NotificationService.Configurations
             })
             .AddJwtBearer(configureOpts =>
             {
-                configureOpts.SaveToken = true;
                 configureOpts.TokenValidationParameters = new TokenValidationParameters
                 {
                     ValidateIssuerSigningKey = true,

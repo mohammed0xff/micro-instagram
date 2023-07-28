@@ -57,50 +57,10 @@ namespace NotificationService.EventSubscriber
 
         private void InitializeRabbitMQ()
         {
+            // rabbit mq configurations go here 
 
             _channel = _connection.CreateModel();
-
-/*            // User exchange and queue
-            _channel.ExchangeDeclare(
-                exchange: "user_exchange", 
-                type: ExchangeType.Fanout
-                );
-            
-            _channel.QueueDeclare(
-                queue: "user-queue", 
-                durable: true, 
-                exclusive: false, 
-                autoDelete: false
-                );
-            
-            _channel.QueueBind(
-                queue: "user-queue", 
-                exchange: "user_exchange", 
-                routingKey: "user.*"
-                );
-
-
-            // Follow exchange and queue
-            _channel.ExchangeDeclare(
-                exchange: "follow_exchange", 
-                type: ExchangeType.Fanout
-                );
-            
-            _channel.QueueDeclare(
-                queue: "follow-queue", 
-                durable: true, 
-                exclusive: false, 
-                autoDelete: false
-                );
-            
-            _channel.QueueBind(
-                queue: "follow-queue", 
-                exchange: "follow_exchange", 
-                routingKey: "follow.*"
-                );*/
-
             _logger.LogInformation("Listening on the Message Bus");
-
         }
 
         protected override Task ExecuteAsync(CancellationToken stoppingToken)
@@ -161,7 +121,7 @@ namespace NotificationService.EventSubscriber
             var fullTypeName = $"Shared.Events.{eventTypeName}";
 
             // Get the assembly that contains the type
-            Type? eventType = Type.GetType(fullTypeName); // returning null !
+            Type? eventType = Type.GetType(fullTypeName); // TOFIX : returning null !
             
             if (eventType == null)
             {

@@ -1,6 +1,5 @@
 ﻿using Microsoft.Extensions.Options;
 using RabbitMQ.Client;
-using Shared.Converters;
 using Shared.Events;
 using System.Text;
 using System.Text.Json;
@@ -108,7 +107,6 @@ namespace UserService.MessageBus
         {
             var options = new JsonSerializerOptions
             {
-                Converters = { new TypeConverter() },
                 IncludeFields = true
             };
 
