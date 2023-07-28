@@ -211,8 +211,8 @@ The format of the routing key depends on the type of exchange that is being used
 
 - For topic exchanges, the routing key is a string that can contain one or more words separated by dots, such as "my.routing.key". the words in the routing key are used to match against the routing patterns specified in the exchange bindings using special wildcard characters. the two wildcard characters that are supported are:
 
-(star) * : Matches exactly one word in the routing key.
-(hash) # : Matches zero or more words in the routing key.
+(star) * : Matches exactly one word in the routing key. <br/>
+(hash) # : Matches zero or more words in the routing key. <br/>
 
 For example, if an exchange binding specifies a routing pattern of "my.#.key", then a message published with the routing key "my.routing.key" or "my.very.long.routing.key" will be delivered to the queue, but a message published with the routing key "another.routing.key" will not.
 
@@ -233,10 +233,319 @@ What did happen behind the scenes?
 
 that may not be exactly the case on real instagram, but it is with ours.
 
+Now, let's think about the queues we need 
+if we just created a follow, what do we need to publish? 
+of cousre its an event that associated to entity `follow` and holds the needed attributes that discribe the action that happened
+so, to comunicate this we need to stadarlize things up so each service is aware of what type of event it is about to recive or publish
+there are three ways that im aware of at this time and im going to talk about breifley and we can explore these approaches in more detail later on.
+
+If you have any suggestions for any of them or have a fourth one, please let us know by sharing your thoughts.
+ 
+1. First way is to include a type field in the event payload :
+
+Having our base event class like this. Holding attributes like `Id`, `CreationDate` and a virtual field `EventType` to indicate event type
+
+```cs
+    public abstract class BaseEvent
+    {
+        public BaseEvent()
+        {
+            Id = Guid.NewGuid();
+            CreationDate = DateTime.Now;
+        }
+    
+        public Guid Id { get; }
+        public DateTime CreationDate { get; }
+        public virtual Type EventType => typeof(BaseEvent);
+    }
+```
+
+Why do we need a base event? 
+because there are basic attributes that every event must contain. By having a base event, we can avoid duplicating these basic attributes in all the event classes we have. And we need all of our events to inherit from `BaseEvent` so all of them must override the field `EventType`.
+
+And our `FollowCreatedEvent` might look like this. Overriding `EventType` to its type `typeof(FollowBaseEvent)`
+```
+    public class FollowCreatedEvent : BaseEvent
+    {
+        public override Type EventType => typeof(FollowBaseEvent);
+
+        public Guid FollowerId { get; set; }
+        public Guid FollowedId { get; set; }
+        public string FollowerUsername { get; set; }
+    }
+```
+
+Now listeners can recieve and desericalize the event knowing its type from the field `EventType`
+
+2. Second way is Use different exchange or topic for each event type, and that's the one i choosed and we are going to implement in the very next section.
+
+3. A third way is to use a message schema or contract that defines the structure and format of the event, including any required fields or metadata. When consuming events, services can validate the message against the schema or contract to ensure that it's of the expected type. let's take a brief look.
+
+Let's say that you have a `User Service` that publishes events related to new follow relationship. You want to ensure that other services consuming these events know exactly what to expect in terms of the event payload.
+
+To accomplish this, you could define a message schema or contract for the `FollowCreated` event that includes the expected structure and format of the event. 
+Here's an example of what this schema might look like in JSON format:
+
+```json
+    {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "creationDate": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "eventType": {
+          "type": "string"
+        },
+        "followerId": {
+          "type": "string"
+        },
+        "followedId": {
+          "type": "string"
+        },
+        "followerUsername": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "id",
+        "creationDate",
+        "eventType",
+        "followerId",
+        "followedId",
+        "followerUsername"
+      ]
+    }
+```
+
+When the `User Service` publishes a `FollowCreated` event, it can include the event payload as a JSON object that adheres to this schema. 
+Other services consuming this event can then validate the message against the schema to ensure that it's of the expected type.
+
+
 #### `User Service` As a publisher 
+
+first off we need to start a connection to RabbitMQ 
+We do this by calling `factory.CreateConnection()` and assigns the resulting connection to the connection field of the class. then create a new model (channel) from the connection.
+
+Once the connection is established, the code creates a new channel on the connection. Channels are used to send and receive messages to and from the RabbitMQ server.
+and of course before starting to throw messages at rabbitMQ we want to declare exhcanges that we are going to use and bind them to the queues that we are going to publish messages to.
+here we declare `follow_exchange`. we know that an exchange is an entity that receives messages from producers and routes them to queues with matching routing keys. The `follow_exchange` exchange is of type ExchangeType.Topic, which means it can route messages based on a pattern match on the routing key.
+
+After the exchange is declared, we are going to declare a new queue named `follow-queue`. and we also know that a queue is a buffer that holds messages that are waiting to be processed by a consumer. In this case, the follow-queue will hold messages related to new follow relationships.
+
+Finally, we are going to bind the `follow-queue` to the `follow_exchange` exchange with the routing key `follow.*`. Binding is the process of connecting a queue to an exchange so that messages can be routed to the queue. In this case, the `follow-queue` will receive messages that have a routing key that starts with `follow.`.
+
+For exampe : routing key wil be like `follow.FollowCreated` , `follow.FollowDeleted` etc. all routed to the queue : `follow-queue`.
+and the second part of the routing key, the one that follows the dot `FollowCreated`, is for determining the type of the published event, This allows consumers to easily identify event types, which is the second method we discussed in the previous section. which i think is pretty cool.
+
+```cs
+    public class MessageBusClient : IMessageBusClient
+    {
+        private readonly IConnection _connection;
+        private readonly IModel _channel;
+        private readonly ILogger<MessageBusClient> _logger;
+
+        public MessageBusClient(
+            IOptions<RabbitMQSettings> rabbitMQSettings, 
+            ILogger<MessageBusClient> logger
+            )
+        {
+            _logger = logger;
+            // create a new connection factory with the settings from the appsettings.json file
+            var factory = new ConnectionFactory()
+            {
+                HostName = rabbitMQSettings.Value.HostName,
+                UserName = rabbitMQSettings.Value.UserName,
+                Password = rabbitMQSettings.Value.Password,
+                Port = rabbitMQSettings.Value.Port
+            };
+
+            try
+            {
+              // create a new connection using the connection factory
+                _connection = factory.CreateConnection();
+                _channel = _connection.CreateModel();
+
+                // declare the Follow exchange
+                _channel.ExchangeDeclare(
+                    exchange: "follow_exchange",
+                    type: ExchangeType.Topic
+                    );
+
+                // declare the Follow queue
+                _channel.QueueDeclare(
+                    queue: "follow-queue",
+                    durable: true,
+                    exclusive: false,
+                    autoDelete: false
+                    );
+
+                // bind the Follow queue to the Follow exchange with the routing key "follow.*"
+                _channel.QueueBind(
+                    queue: "follow-queue",
+                    exchange: "follow_exchange",
+                    routingKey: "follow.*"
+                    );
+
+                logger.LogInformation("Connected to MessageBus");
+            }
+            catch (Exception ex)
+            {
+                logger.LogError ($"Could not connect to the Message Bus: {ex.Message}");
+            }
+        }
+
+        public void PublishFollowEvent(BaseEvent @event)
+        {
+            var exchangeName = "follow_exchange";
+            var routingKey = "follow." + @event.GetType().Name;
+
+            PublishEvent(@event, routingKey, exchangeName);
+        }
+
+        private void PublishEvent(BaseEvent @event, string routingKey, string exchangeName)
+        {
+            var options = new JsonSerializerOptions
+            {
+                IncludeFields = true
+            };
+
+            var typedEvent = Convert.ChangeType(@event, @event.GetType());
+            var message = JsonSerializer.Serialize(typedEvent, options);
+
+            if (_connection.IsOpen)
+            {
+                _logger.LogInformation("RabbitMQ connection is open, sending message.");
+                SendMessage(message, exchangeName, routingKey);
+            }
+            else
+            {
+                _logger.LogInformation("RabbitMQ connection is closed.");
+            }
+        }
+
+        private void SendMessage(string message, string exchangeName, string routingKey)
+        {
+            var body = Encoding.UTF8.GetBytes(message);
+
+            _channel.BasicPublish(exchange: exchangeName,
+                                    routingKey: routingKey,
+                                    basicProperties: null,
+                                    body: body);
+
+            _logger.LogInformation($"Message sent successfully, Message: {message}");
+        }
+    }
+
+```
 
 
 #### `Notification Service` As a consumer 
+
+As a consumer that must be always be listening for any incomming messages we can let our `MessageBusSubscriber` inherit from `BackgroundService`
+
+from the definition :  ` The BackgroundService class implements the IHostedService interface and provides a simple framework for creating a background task that can be started and stopped by the application's IHost implementation. It handles the lifecycle management of the background task, including starting and stopping it when the application is started or stopped.`
+
+```cs
+    public class MessageBusSubscriber : BackgroundService
+    {
+        private readonly ILogger<MessageBusSubscriber> _logger;
+        private readonly IEventProcessor _eventProcessor;
+        private IConnection _connection;
+        private IModel _channel;
+
+        public MessageBusSubscriber(
+            IOptions<RabbitMQSettings> rabbitMQSettings,
+            IEventProcessor eventProcessor,
+            ILogger<MessageBusSubscriber> logger)
+        {
+            _logger = logger;
+            _eventProcessor = eventProcessor;
+
+            var factory = new ConnectionFactory()
+            {
+                HostName = rabbitMQSettings.Value.HostName,
+                UserName = rabbitMQSettings.Value.UserName,
+                Password = rabbitMQSettings.Value.Password,
+                Port = rabbitMQSettings.Value.Port
+            };
+
+            try
+            {
+                _connection = factory.CreateConnection();
+                _channel = _connection.CreateModel();
+
+                _logger.LogInformation("Listening on the Message Bus");
+
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError($"Could not connect to the Message Bus: {ex.Message}");
+            }
+        }
+
+        // This method is called when the IHostedService starts.
+        protected override Task ExecuteAsync(CancellationToken stoppingToken)
+        {
+            try
+            {
+                stoppingToken.ThrowIfCancellationRequested();
+
+                var consumer = new EventingBasicConsumer(_channel);
+                consumer.Received += HandleReceivedEvent!;
+
+                // Consume from follow-queue
+                _channel.BasicConsume(queue: "follow-queue", autoAck: true, consumer: consumer);
+
+            }catch(Exception ex)
+            {
+                _logger.LogError($"Error on starting MessageBusSubscriber service {ex.Message}");
+            }
+
+            return Task.CompletedTask;
+        }
+
+        private void HandleReceivedEvent(object ModuleHandle, BasicDeliverEventArgs ea)
+        {
+            try
+            {
+                _logger.LogInformation("Event message was received");
+
+                var body = ea.Body;
+                var eventMessage = Encoding.UTF8.GetString(body.ToArray());
+
+                // DeserializeEvent function that we are going to implement
+                // should return an event deserialized to its type after determining its type
+                // with the help of routing key as we talked earlier.
+                var @event = (BaseEvent)DeserializeEvent(eventMessage, ea.RoutingKey);
+
+                _eventProcessor.ProcessEvent(@event);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError($"Error on processing received message {ex.Message}");
+            }
+        }
+    }
+
+```
+
+- As we did with our publisher we are going to create a connection. then we are going to tell RabbitMQ what queues we are interested in.
+
+```cs
+      _channel.BasicConsume(queue: "follow-queue", autoAck: true, consumer: consumer);
+```   
+- And we can add it to the service collection as a `HostedService` that start running as soon as the service does.
+
+```cs
+      builder.Services.AddHostedService<MessageBusSubscriber>();
+```
+
+Now we have two services one publishing events and the other is listening and conuming those events!
+let's celebrate!
 
 -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- --
 
