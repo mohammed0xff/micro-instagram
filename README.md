@@ -30,7 +30,7 @@ In this section, we're going to explore the "why" behind our decision to use a m
 
 Before we dive into the reasons behind our decision, let's define what we mean by "microservices".
 
-A microservices architecture is a method of developing software systems that are made up of independently modular services. Each service runs a unique process and communicates through a well-defined, lightweight mechanism to serve a specific goal.
+A `microservices architecture` is a method of developing software systems that are made up of independently modular services. Each service runs a unique process and communicates through a well-defined, lightweight mechanism to serve a specific goal.
 
 When crafting a software application, one of the critical decisions we make is the architectural style we adopt. It fundamentally influences how we organize our code, how our application scales, and how teams work together.
 
@@ -59,7 +59,6 @@ Choosing a microservices architecture offers us several key advantages:
 While a monolithic architecture might seem simpler at first, as the application grows, the complexity can become a significant challenge. With microservices, we can better manage this complexity by breaking down the application into manageable, isolated components.
 
 In the following sections, we'll delve deeper into these advantages and explore how we can leverage them to build our Instagram-like application.
-
 
 -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- 
 
@@ -130,17 +129,14 @@ Synchronous or Asynchronous communication methods are the two main types of comm
 * Synchronous communication involves making HTTP requests to other services
 * Asynchronous communication involves using message queues or publish-subscribe mechanisms to send messages between services.
 
-Remember we always want to ask the question first before jumping on solutions. 
-keeping an image of what's going on in the back of your mind and filling gaps in it one step at a time.
-
-Great job on your tutorial! Here's a suggestion to finalize the text:
+Remember we always want to ask the question first before jumping on solutions. keeping an image of what's going on in the back of your mind and filling gaps in it one step at a time.
 
 When building a microservices architecture, it's important to consider how and what the services will communicate. Let's consider our instagram-like application, 
 for example : When someone follows you on instagram, the `User Service` creates a follow between you and the follower. The `Notification Service` then sends you a notification about the new follow.
 
-To enable this communication, the `User Service` could send a synchronous HTTP request to the Notification Service or use asynchronous communication using a message queue. If the action of follow only concerns the `Notification Service`, a synchronous HTTP request would be a fine choice. However, if the follow concerns not just the `Notification Service` but more than one service, like the Feed Service, it's better to use a publish-subscribe mechanism with a message bus like RabbitMQ or Apache Kafka.
+To enable this communication, the `User Service` could send a synchronous HTTP request to the `Notification Service` or use asynchronous communication using a message queue. If the action of follow only concerns the `Notification Service`, a synchronous HTTP request would be a fine choice. However, if the follow concerns not just the `Notification Service` but more than one service, like the `Feed Service`, it's better to use a publish-subscribe mechanism with a message bus like RabbitMQ or Apache Kafka.
 
-Also using synchronous communication may not always be the best solution. For example, when the User Service creates a follow between two users, it doesn't need to wait for the Notification Service to send the notification. Therefore, using synchronous communication in this case would add unnecessary latency. Instead, using asynchronous communication with a message queue allows the `User Service` to continue with its job, while the Notification Service processes the event in the background and sends the notification when it's ready. This approach improves the performance and scalability of the application.
+Also using synchronous communication may not always be the best solution. For example, when the User Service creates a follow between two users, it doesn't need to wait for the `Notification Service` to send the notification. Therefore, using synchronous communication in this case would add unnecessary latency. Instead, using asynchronous communication with a message queue allows the `User Service` to continue with its job, while the `Notification Service` processes the event in the background and sends the notification when it's ready. This approach improves the performance and scalability of the application.
 We will explore other use cases of synchronous communications later in this tutorial.
 
 On the other hand, message buses are a beautiful solution because they allow you to publish an event whenever something happens. Whoever needs to handle that event can subscribe to it and respond accordingly. This approach provides a scalable solution and helps to decouple services, making it easier to maintain and modify the application over time.
@@ -176,7 +172,7 @@ But before doing so, lets take a look at the internal workings of RabbitMQ by as
 
 #### Will each publisher announce the list of queues that its wants the message to be mapped to ?
 
-No, RabbitMQ features a very cool concept which is called "an Exchange" Exchanges : are the entities responsible for receiving messages from publisher and routing them to one or more queues based on specific rules. RabbitMQ supports four types of exchanges: direct, fanout, topic, and headers. we are going to explore each one in a sec.
+No, RabbitMQ features a very cool concept which is called "an Exchange" Exchanges : are the entities responsible for receiving messages from publisher and routing them to one or more queues based on specific rules. RabbitMQ supports four types of exchanges: `direct`, `fanout`, `topic`, and `headers`. we are going to explore each one in a sec.
 
 #### How to use exchanges and how does they know about the queues that exist ?
 
@@ -228,14 +224,14 @@ Remember last time when you followed another user on instagram?
 
 What did happen behind the scenes?
 
--> You clicked a button 
--> The web client sends a POST request to the server on the endpoint /users/follow/{your-friend}.
--> The `User Service` receives the request and creates a follow relationship between you and the other user.
--> The `User Service` publishes an event to RabbitMQ indicating that a new follow relationship has been created.
--> The `Notification Service` consumes the event from RabbitMQ and creates a new notification indicating that you have followed the other user
--> The `Notification Service` sends the notification to your friend telling them that now they are followed by you.
+-> You clicked a button </br>
+-> The web client sends a POST request to the server on the endpoint /users/follow/{your-friend}. </br>
+-> The `User Service` receives the request and creates a follow relationship between you and the other user. </br>
+-> The `User Service` publishes an event to RabbitMQ indicating that a new follow relationship has been created. </br>
+-> The `Notification Service` consumes the event from RabbitMQ and creates a new notification indicating that you have followed the other user </br>
+-> The `Notification Service` sends the notification to your friend telling them that now they are followed by you. </br>
 
-That's not be what excatly the case on real instagram, but it is with ours.
+that may not be exactly the case on real instagram, but it is with ours.
 
 #### `User Service` As a publisher 
 
