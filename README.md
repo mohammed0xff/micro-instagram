@@ -277,7 +277,7 @@ Why do we need a base event?
 because there are basic attributes that every event must contain. By having a base event, we can avoid duplicating these basic attributes in all the event classes we have. And we need all of our events to inherit from `BaseEvent` so all of them must override the field `EventType`.
 
 And our `FollowCreatedEvent` might look like this. Overriding `EventType` to its type `typeof(FollowBaseEvent)`
-```
+```cs
     public class FollowCreatedEvent : BaseEvent
     {
         public override Type EventType => typeof(FollowBaseEvent);
@@ -557,9 +557,28 @@ from the definition :  ` The BackgroundService class implements the IHostedServi
       builder.Services.AddHostedService<MessageBusSubscriber>();
 ```
 
-Now we have two services one publishing events and the other is listening and conuming those events!
+Now we have two services one publishing events and the other is listening and conuming those events! <br/>
 let's celebrate!
 
+-- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- --
+
+### RabbigMQ | Recapping and asking more quesions 
+
+#### Who is supposed to declare Queues?
+
+while the publisher is typically responsible for declaring the exchange and queue, it is also possible for the subscriber to declare the queue and the exchange if the subscriber needs to "ensure" that the queue and exchange exist before it starts consuming messages.
+
+this can be useful in scenarios where the subscriber is deployed on a different machine than the publisher or in a distributed system where the publisher and subscriber may be started in any order.
+
+#### Is the consumer aware of all the details? ( the consumer point of view )
+
+from the consumer's perspective in RabbitMQ, the primary concern is the queue from which they receive messages.
+
+In RabbitMQ, messages are not published directly to queues. Instead, the producer sends messages to an exchange. The exchange is then responsible for routing the message to one or more queues based on certain rules. These rules can be configured using bindings and routing keys.
+
+However, a consumer does not need to be aware of these details. all the consumer needs to know is the name of the queue from which it should consume messages. The consumer subscribes to a queue and then processes messages from that queue. It does not need to be aware of which  exchange the messages came from or what routing rules were used to get the message to the queue.
+
+#### If you have any other question please drop it right here or raise an issue about it.
 -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- --
 
 
