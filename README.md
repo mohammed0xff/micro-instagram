@@ -24,6 +24,19 @@ We'll be implementing our application using technologies such as ASP.NET Core, R
 
 -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- 
 
+##  The nature of software
+
+Now, we have no clue about how instagram's team planned and developed their platform throughout the years. and actually, we don't need to, because even if we did, we 
+probably wouldn't understand much of it!
+
+What we can do, however, is contemplate instagram as a completed application. We can break it down into smaller pieces and examine each piece. When thinking about instagram or any software for that matter there are countless ways to plan and design it. Sometimes, we might start coding, only to realize realize that your plan is completely broken. But that's the nature of logic and thought. unlike strict realiy , our minds are broad enough to accommodate even the most imperfect ideas, which is where imagination kicks in, taking things to the next level.
+
+The reality of computations and programming , on the other hand, is a bit like assembling Lego pieces. We contemplate over how to piece together chunks of code into a working software that won't collapse if we tweak one element.
+
+We could trace back to the beginning of it all, to the emergence of computational reality from simple electric currents representing numbers in wires. But let's keep it simple, we aim to push one step at a time. and always ask ourselves one single question "Is it working?" Yes? Then Cheers, that's already more than we asked for!
+
+-- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- 
+
 ## The Why
 
 In this section, we're going to explore the "why" behind our decision to use a microservices architecture for our Instagram-like application, as opposed to a monolithic architecture.
