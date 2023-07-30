@@ -1,4 +1,4 @@
-# Micro Instagram 
+![image](https://github.com/mohammed0xff/micro-instagram/assets/81110384/0ad06c76-6d1b-4d3a-8d18-67a308d38230)# Micro Instagram 
 
 Welcome to this (hopefully) collaborative tutorial on microservices. Together, we're going to explore the `why` and the `how` of implementing a web application with microservices architecture.
 
@@ -579,6 +579,27 @@ In RabbitMQ, messages are not published directly to queues. Instead, the produce
 However, a consumer does not need to be aware of these details. all the consumer needs to know is the name of the queue from which it should consume messages. The consumer subscribes to a queue and then processes messages from that queue. It does not need to be aware of which  exchange the messages came from or what routing rules were used to get the message to the queue.
 
 #### If you have any other question please drop it right here or raise an issue about it.
+-- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- --
+
+### What's next ?
+
+So, what's next we said that we are not particularyly intersted in implementing instagram functionalities, we can continue adding more services to this implementation along with the two we currentlly have (User Service and Notification Service), but we are more intersted in using and learning about the why and how of every microservices technology.
+
+Lets list them :
+* Kubernetes - a container orchestration and management platform.
+* Docker - a containerization technology.
+* Docker-compose - Tool for defining and running multi-container Docker applications.
+* gRPC - high performance Remote Procedure Call (RPC) framework that can run in any environment.
+* API Gateway - Middleware that acts as a gateway between clients and backend services, providing authentication, rate limiting, and other functionalities.
+* HAProxy - Load balancer and proxy server for TCP/HTTP-based applications.
+
+We can continue on improving this code adding those technologies. however, this might be overwhelming for a biginner to look at as a whole.
+So, will gradually create other versions of the application, with each version being one step further from the previous one. We will proceed one step at a time, and each new version will include just one additional feature compared to the previous one. and i will figure out a way so they can be easily navigated between.
+
+Also this will allow anyone who might decide to tweek this applicatoin in any way or push it towards any side adding some features, doing anything differntly and explaining their point of view. and this would be VERY exciting!
+
+Too much to learn? Dont worry, While always keeping the big picture in your mind, and always asking the `Why` we will never be confused. or allow yourself to be confused. remember, confusion a fundmental part of the learning process! 
+
 -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- --
 
 
