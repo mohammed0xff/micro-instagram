@@ -593,8 +593,12 @@ Lets list them :
 * API Gateway - Middleware that acts as a gateway between clients and backend services, providing authentication, rate limiting, and other functionalities.
 * HAProxy - Load balancer and proxy server for TCP/HTTP-based applications.
 
-consider this as a reference.
-![](https://www.researchgate.net/profile/Ammar-Muthanna/publication/357374742/figure/fig3/AS:1105969950015496@1640695192447/Typical-microservice-high-level-functional-architecture-of-the-software.ppm)
+Consider this image as a reference.
+
+<p align="center">
+  <img src="https://github.com/mohammed0xff/micro-instagram/blob/master/images/typical-microservice-high-level-view.png" />
+</p>
+
 
 We can continue on improving this code adding those technologies. however, this might be overwhelming for a biginner to look at as a whole.
 So, will gradually create other versions of the application, with each version being one step further from the previous one. We will proceed one step at a time, and each new version will include just one additional feature compared to the previous one. and i will figure out a way so they can be easily navigated between.
