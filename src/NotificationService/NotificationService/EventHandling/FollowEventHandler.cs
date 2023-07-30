@@ -1,7 +1,6 @@
 ﻿using NotificationService.Data;
 using NotificationService.Models;
 using Shared.Events;
-using Shared.Events.FollowEvents.Follow;
 
 namespace NotificationService.EventHandling
 {

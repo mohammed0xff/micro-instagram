@@ -1,6 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using Shared.Events.FollowEvents.Follow;
-using Shared.Events.FollowEvents.FollowRequest;
+using Shared.Events;
 using UserService.Api.Responses;
 using UserService.Api.Responses.Enums;
 using UserService.DBContext;

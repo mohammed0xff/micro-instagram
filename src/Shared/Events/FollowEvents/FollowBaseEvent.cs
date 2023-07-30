@@ -1,4 +1,4 @@
-﻿namespace Shared.Events.FollowEvents
+﻿namespace Shared.Events
 {
     public class FollowBaseEvent : BaseEvent
     {

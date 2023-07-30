@@ -8,7 +8,6 @@ using Shared.Authentication;
 using NotificationService.EventHandling;
 using Shared.Events;
 using NotificationService.Configurations;
-using Shared.Events.FollowEvents.Follow;
 
 var builder = WebApplication.CreateBuilder(args);
 
