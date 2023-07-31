@@ -9,9 +9,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NotificationService", "Noti
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Shared", "Shared\Shared.csproj", "{97E9BC96-99E5-4FA4-BDD8-D2FA2AE773C3}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "UserService.Tests", "UserService.Tests\UserService.Tests.csproj", "{8C72FF3F-B8DA-4FD0-B229-65A5A51E9208}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "UserService.Tests", "../tests/UserService.Tests\UserService.Tests.csproj", "{8C72FF3F-B8DA-4FD0-B229-65A5A51E9208}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NotificationService.Tests", "NotificationService.Tests\NotificationService.Tests.csproj", "{D254D896-A987-4B38-B11D-C2CC7D960BF9}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NotificationService.Tests", "../tests/NotificationService.Tests\NotificationService.Tests.csproj", "{D254D896-A987-4B38-B11D-C2CC7D960BF9}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
