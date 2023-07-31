@@ -280,7 +280,7 @@ And our `FollowCreatedEvent` might look like this. Overriding `EventType` to its
 ```cs
     public class FollowCreatedEvent : BaseEvent
     {
-        public override Type EventType => typeof(FollowBaseEvent);
+        public override Type EventType => typeof( FollowCreatedEvent );
 
         public Guid FollowerId { get; set; }
         public Guid FollowedId { get; set; }
