@@ -8,6 +8,7 @@ using Shared.Authentication;
 using NotificationService.EventHandling;
 using Shared.Events;
 using NotificationService.Configurations;
+using NotificationService.DBContext.Seed;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -41,7 +42,7 @@ builder.Services.AddDbContext<AppDbContext>(options =>
 
 var app = builder.Build();
 
-if (app.Environment.IsDevelopment())
+if (app.Environment.IsDevelopment() || app.Environment.IsEnvironment("Docker"))
 {
     app.UseSwagger();
     app.UseSwaggerUI();
@@ -53,5 +54,7 @@ app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllers();
+
+await app.ConfigureDatabaseAsync();
 
 app.Run();
