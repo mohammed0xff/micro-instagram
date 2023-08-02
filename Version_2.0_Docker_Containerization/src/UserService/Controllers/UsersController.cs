@@ -2,7 +2,6 @@
 using Microsoft.AspNetCore.Mvc;
 using Shared.Authentication;
 using UserService.Api.Responses;
-using UserService.Entities;
 using UserService.Services;
 
 namespace UserService.Controllers
@@ -57,7 +56,7 @@ namespace UserService.Controllers
 
         [HttpPost]
         [Route("{username}/follow")]
-        [ProducesResponseType(typeof(User), StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status201Created)]
         public async Task<IActionResult> Follow([FromRoute] string username)
         {
             try
@@ -73,7 +72,7 @@ namespace UserService.Controllers
 
         [HttpPost]
         [Route("{username}/unfollow")]
-        [ProducesResponseType(typeof(User), StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status201Created)]
         public async Task<IActionResult> UnFollow([FromRoute] string username)
         {
             try
@@ -89,7 +88,7 @@ namespace UserService.Controllers
 
         [HttpPost]
         [Route("{username}/send-follow-request")]
-        [ProducesResponseType(typeof(User), StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status201Created)]
         public async Task<IActionResult> SendFollowRequest([FromRoute] string username)
         {
             try
@@ -105,7 +104,7 @@ namespace UserService.Controllers
 
         [HttpPost]
         [Route("{username}/cancel-follow-request")]
-        [ProducesResponseType(typeof(User), StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status201Created)]
         public async Task<IActionResult> DeleteFollowRequest([FromRoute] string username)
         {
             try
@@ -121,7 +120,7 @@ namespace UserService.Controllers
 
         [HttpPost]
         [Route("{username}/accept-follow-request")]
-        [ProducesResponseType(typeof(User), StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status201Created)]
         public async Task<IActionResult> AcceptFollowRequest([FromRoute] string username)
         {
             try
@@ -137,7 +136,7 @@ namespace UserService.Controllers
 
         [HttpPost]
         [Route("{username}/reject-follow-request")]
-        [ProducesResponseType(typeof(User), StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status201Created)]
         public async Task<IActionResult> RejectFollowRequest([FromRoute] string username)
         {
             try
@@ -153,7 +152,7 @@ namespace UserService.Controllers
 
         [HttpPost]
         [Route("{username}/followers")]
-        [ProducesResponseType(typeof(User), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(List<UserResponse>), StatusCodes.Status200OK)]
         public async Task<IActionResult> Followers([FromRoute] string username)
         {
             try
@@ -169,7 +168,7 @@ namespace UserService.Controllers
 
         [HttpPost]
         [Route("{username}/following")]
-        [ProducesResponseType(typeof(User), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(List<UserResponse>), StatusCodes.Status200OK)]
         public async Task<IActionResult> Following([FromRoute] string username)
         {
             try
