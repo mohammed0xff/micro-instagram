@@ -2,15 +2,15 @@
 
 FROM mcr.microsoft.com/dotnet/aspnet:7.0 AS base
 WORKDIR /app
-EXPOSE 80
-EXPOSE 443
+EXPOSE 7000
 
 FROM mcr.microsoft.com/dotnet/sdk:7.0 AS build
 WORKDIR /src
-COPY ["NotificationService/NotificationService.csproj", "NotificationService/"]
-RUN dotnet restore "NotificationService/NotificationService.csproj"
+COPY ["./src/NotificationService/NotificationService.csproj", "./NotificationService/"]
+COPY ["./src/Shared/Shared.csproj", "./Shared/"]
+RUN dotnet restore "./NotificationService/NotificationService.csproj"
 COPY . .
-WORKDIR "/src/NotificationService"
+WORKDIR "src/NotificationService/"
 RUN dotnet build "NotificationService.csproj" -c Release -o /app/build
 
 FROM build AS publish

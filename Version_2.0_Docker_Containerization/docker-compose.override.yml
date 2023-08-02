@@ -1,0 +1,13 @@
+version: '3.9'
+
+services:
+
+  notification_service:
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Docker
+      - ASPNETCORE_URLS=http://+:7000
+
+  user_service:
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Docker
+      - ASPNETCORE_URLS=http://+:8000

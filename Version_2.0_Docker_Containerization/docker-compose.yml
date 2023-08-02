@@ -1,5 +1,13 @@
 version: "3.9"
+
+networks:
+  app-network:
+    driver: bridge
+
+
 services:
+
+  # RabbitMQ
   rabbitmq:
     image: rabbitmq:3.9-management-alpine
     ports:
@@ -8,3 +16,51 @@ services:
     environment:
       RABBITMQ_DEFAULT_USER: "guest"
       RABBITMQ_DEFAULT_PASS: "guest"
+    networks:
+      - app-network
+
+  # SQL Server
+  sqlserver:
+    image: mcr.microsoft.com/mssql/server:2017-latest 
+    container_name: sqlserver
+    hostname: mssql
+    cap_add: [ 'SYS_PTRACE' ]
+    restart: always
+    ports:
+      - 1433:1433
+    environment:
+      - ACCEPT_EULA=Y
+      - SA_PASSWORD=hP75#q3q
+    networks:
+      - app-network
+
+  # Services  
+
+  user_service:
+    image: user_service:local
+    container_name: user_service
+    build: 
+        context: .
+        dockerfile: ./src/UserService/Dockerfile
+    ports:
+      - "8000:8000"
+    depends_on:
+      - rabbitmq
+      - sqlserver
+    networks:
+      - app-network
+
+  notification_service:
+    image: notification_service:local
+    container_name: notification_service
+    build: 
+        context: .
+        dockerfile: ./src/NotificationService/Dockerfile
+    ports:
+      - "7000:7000"
+    depends_on:
+      - rabbitmq
+      - sqlserver
+      - user_service
+    networks:
+      - app-network
