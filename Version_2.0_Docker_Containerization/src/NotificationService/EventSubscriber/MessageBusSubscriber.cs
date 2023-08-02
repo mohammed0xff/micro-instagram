@@ -16,6 +16,7 @@ namespace NotificationService.EventSubscriber
         private readonly IEventProcessor _eventProcessor;
         private IConnection _connection;
         private IModel _channel;
+        private ConnectionFactory _factory;
 
         public MessageBusSubscriber(
             IOptions<RabbitMQSettings> rabbitMQSettings,
@@ -24,23 +25,21 @@ namespace NotificationService.EventSubscriber
         {
             _logger = logger;
             _eventProcessor = eventProcessor;
-
-            var factory = new ConnectionFactory()
+            _factory = new ConnectionFactory()
             {
                 HostName = rabbitMQSettings.Value.HostName,
                 UserName = rabbitMQSettings.Value.UserName,
                 Password = rabbitMQSettings.Value.Password,
                 Port = rabbitMQSettings.Value.Port
             };
-            _connection = factory.CreateConnection();
-
-            InitializeRabbitMQ();
         }
 
         private void InitializeRabbitMQ()
         {
             try
             {
+                _connection = _factory.CreateConnection();
+
                 // rabbit mq configurations go here 
                 _channel = _connection.CreateModel();
 
@@ -66,6 +65,8 @@ namespace NotificationService.EventSubscriber
             {
                 stoppingToken.ThrowIfCancellationRequested();
 
+                InitializeRabbitMQ();
+
                 var consumer = new EventingBasicConsumer(_channel);
 
                 consumer.Received += HandleReceivedEvent!;
@@ -82,7 +83,6 @@ namespace NotificationService.EventSubscriber
 
             return Task.CompletedTask;
         }
-
 
         private void HandleReceivedEvent(object ModuleHandle, BasicDeliverEventArgs ea)
         {
