@@ -1,5 +1,7 @@
 In this verison we're going to containterize our application with docker 
 
+![How tor run this version](https://github.com/mohammed0xff/micro-instagram/blob/master/Version_2.0_Docker_Containerization/README-How-To-Run.md)
+
 # Why ?
 
 Imagine you have a computer with different applications installed, and each application requires different dependencies and configurations. 
