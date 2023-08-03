@@ -251,7 +251,7 @@ that work together to form an application.
 
 ## How?
 
-(comming)
+![here](https://github.com/mohammed0xff/micro-instagram/blob/master/Version_2.0_Docker_Containerization/README-docker-compose.md)
 
 
 ## Is that all of it ? 
