@@ -39,9 +39,22 @@ namespace NotificationService.EventSubscriber
             try
             {
                 _connection = _factory.CreateConnection();
+                _channel = _connection.CreateModel();
 
                 // rabbit mq configurations go here 
-                _channel = _connection.CreateModel();
+                _channel.QueueDeclare(
+                    queue: "user-queue",
+                    durable: true,
+                    exclusive: false,
+                    autoDelete: false
+                );
+
+                _channel.QueueDeclare(
+                    queue: "follow-queue",
+                    durable: true,
+                    exclusive: false,
+                    autoDelete: false
+                );
 
                 // Adding a delegate to ConnectionShutdown event to Log a message
                 // indicating that the RabbitMQ connection has been shut down
