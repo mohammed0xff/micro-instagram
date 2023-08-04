@@ -72,12 +72,16 @@ namespace NotificationService.EventSubscriber
             }
         }
 
-        protected override Task ExecuteAsync(CancellationToken stoppingToken)
+        protected override async Task ExecuteAsync(CancellationToken stoppingToken)
         {
             try
             {
                 stoppingToken.ThrowIfCancellationRequested();
 
+                // fix : waiting for rabbitmq server to get its stuff set up
+                // if you can find any better way to approach this issue please let me know!
+                await Task.Delay(10000, stoppingToken);
+                
                 InitializeRabbitMQ();
 
                 var consumer = new EventingBasicConsumer(_channel);
@@ -94,7 +98,6 @@ namespace NotificationService.EventSubscriber
                 _logger.LogError($"Error on starting MessageBusSubscriber service {ex.Message}");
             }
 
-            return Task.CompletedTask;
         }
 
         private void HandleReceivedEvent(object ModuleHandle, BasicDeliverEventArgs ea)
