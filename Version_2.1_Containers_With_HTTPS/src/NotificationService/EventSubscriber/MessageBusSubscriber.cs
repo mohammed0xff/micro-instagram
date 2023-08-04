@@ -39,9 +39,22 @@ namespace NotificationService.EventSubscriber
             try
             {
                 _connection = _factory.CreateConnection();
+                _channel = _connection.CreateModel();
 
                 // rabbit mq configurations go here 
-                _channel = _connection.CreateModel();
+                _channel.QueueDeclare(
+                    queue: "user-queue",
+                    durable: true,
+                    exclusive: false,
+                    autoDelete: false
+                );
+
+                _channel.QueueDeclare(
+                    queue: "follow-queue",
+                    durable: true,
+                    exclusive: false,
+                    autoDelete: false
+                );
 
                 // Adding a delegate to ConnectionShutdown event to Log a message
                 // indicating that the RabbitMQ connection has been shut down
@@ -59,11 +72,15 @@ namespace NotificationService.EventSubscriber
             }
         }
 
-        protected override Task ExecuteAsync(CancellationToken stoppingToken)
+        protected override async Task ExecuteAsync(CancellationToken stoppingToken)
         {
             try
             {
                 stoppingToken.ThrowIfCancellationRequested();
+
+                // fix : waiting for rabbitmq server to get its stuff set up
+                // if you can find any better way to approach this issue please let me know!
+                await Task.Delay(10000, stoppingToken);
 
                 InitializeRabbitMQ();
 
@@ -81,7 +98,6 @@ namespace NotificationService.EventSubscriber
                 _logger.LogError($"Error on starting MessageBusSubscriber service {ex.Message}");
             }
 
-            return Task.CompletedTask;
         }
 
         private void HandleReceivedEvent(object ModuleHandle, BasicDeliverEventArgs ea)
