@@ -1,0 +1,23 @@
+version: '3.9'
+
+services:
+
+  notification_service:
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Docker
+      - ASPNETCORE_URLS=https://+:7001;http://+:7000
+      - ASPNETCORE_HTTPS_PORT=7001
+      - ASPNETCORE_Kestrel__Certificates__Default__Password=cert-password
+      - ASPNETCORE_Kestrel__Certificates__Default__Path=/https/cert.pfx
+    volumes:
+      - ~/.aspnet/https:/https:ro
+
+  user_service:
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Docker
+      - ASPNETCORE_URLS=https://+:8001;http://+:8000
+      - ASPNETCORE_HTTPS_PORT=8001
+      - ASPNETCORE_Kestrel__Certificates__Default__Password=cert-password
+      - ASPNETCORE_Kestrel__Certificates__Default__Path=/https/cert.pfx
+    volumes:
+      - ~/.aspnet/https:/https:ro
