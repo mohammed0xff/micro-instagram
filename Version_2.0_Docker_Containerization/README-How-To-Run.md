@@ -13,8 +13,8 @@ If you dont have docker installed on your machine search it up, its very easy to
 
 
 you can access 
-* user service on ![](http://localhost:8000/swagger/index.html) <br/>
-* Notification service on ![](http://localhost:7000/swagger/index.html) <br/>
+* User service on ![http://localhost:8000/swagger/index.html](http://localhost:8000/swagger/index.html) <br/>
+* Notification service on ![http://localhost:7000/swagger/index.html](http://localhost:7000/swagger/index.html) <br/>
 
 ### http not https?
 Yes, when using docker we have to setup https ouserlves and that is what we are going to do in the next version
