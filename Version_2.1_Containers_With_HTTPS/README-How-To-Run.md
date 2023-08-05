@@ -17,18 +17,18 @@ Or your services will give this error or a similar one about certificate passowr
 
 1. Make sure you have docker installed and running.
 
-3. Create and install an https certificate:
+3. Create and install a self-signed HTTPS certificate by running this command:
 
 ```
 dotnet dev-certs https -ep "$HOME/.aspnet/https/cert.pfx" -p cert-password --trust 
 ```
-This will Generate a self-signed certificate to enable HTTPS use in development. more on this see [docs](https://learn.microsoft.com/en-us/dotnet/core/tools/dotnet-dev-certs) <br/>
+This will generate and trust a self-signed certificate to enable HTTPS use in development. more on this see [docs](https://learn.microsoft.com/en-us/dotnet/core/tools/dotnet-dev-certs) <br/>
 
 3. Now evrything is fine 😃 and we can 
 run command `docker-compose up -d` to start the application. <br/> 
 
 # 🧪 Testing (now with HTTPS!)
-* User service on ![https://localhost:8000/swagger/index.html](https://localhost:8000/swagger/index.html) <br/>
-* Notification service on ![https://localhost:7000/swagger/index.html](https://localhost:7000/swagger/index.html) <br/>
+* User service on: ![https://localhost:8001/swagger/index.html](https://localhost:8001/swagger/index.html) <br/>
+* Notification service on: ![https://localhost:7001/swagger/index.html](https://localhost:7001/swagger/index.html) <br/>
 
 
