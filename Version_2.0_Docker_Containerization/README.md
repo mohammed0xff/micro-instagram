@@ -1,8 +1,16 @@
 In this verison we're going to containterize our application with docker 
 
-![How tor run this version](https://github.com/mohammed0xff/micro-instagram/blob/master/Version_2.0_Docker_Containerization/README-How-To-Run.md)
+## ![How tor run this version](https://github.com/mohammed0xff/micro-instagram/blob/master/Version_2.0_Docker_Containerization/README-How-To-Run.md)
 
-# Why ?
+# Introduction 
+
+In this version we are going to : 
+* containerize our application with docker. 
+* configure docker compose to define the services and with a single command, 
+we can spin everything up or tear it all down (as they stated it in the docs!).
+
+
+# Why Docker?
 
 Imagine you have a computer with different applications installed, and each application requires different dependencies and configurations. 
 Now, let's say you need to move these applications to a different computer or share them with your team. You might come across compatibility issues 
@@ -27,7 +35,7 @@ In a nutshell, Docker helps in creating portable, reliable, and scalable environ
 It streamlines the development and deployment process by ensuring consistent behavior across different systems.
 
 
-# How 
+# How to Docker
 
 First off we need to make a docker file for each of our services.
 
@@ -209,9 +217,9 @@ while you are in `./micro-instagram/Version_2.0_Docker_Containerization` directo
 ```
 This command will build an image based on the instructions in your Dockerfile
 
-** This is very imortant, Docker might give you all sort of error you might have trouple while trying to sleep at night **
+**This is very important** , Docker might give you all sort of error you might have trouble with while trying to sleep at night!
 
-:: BEWARE ::
+**:: BEWARE ::**
 of the arguments :
 * `-t` for naming the image
 * `--file` for specifing the path docker file
@@ -231,7 +239,7 @@ docker run -p 8000:8000 user_service
 
 To check if a Docker container is up and running, you can use the following command:
 
-```bash
+```shell
 docker ps
 ```
 
@@ -266,10 +274,9 @@ I encourage you to dive more in docker and its commands how does it work there i
 Be tuned and have fun 💜.
 
 
-Furhter reading:
-![what's a container?](https://www.docker.com/resources/what-container/)
-![what is docker how docker works?](https://mindmajix.com/what-is-docker-how-docker-works)
-
+### Furhter reading:
+![what's a container?](https://www.docker.com/resources/what-container/) <br/>
+![what is docker how docker works?](https://mindmajix.com/what-is-docker-how-docker-works) <br/>
 (adding more soon)
 
 Next version will be Kubernetes!
