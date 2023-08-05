@@ -1,4 +1,4 @@
-# Micro Instagram 
+﻿# Micro Instagram 
 
 Welcome to this (hopefully) collaborative tutorial on microservices. Together, we're going to explore the `why` and the `how` of implementing a web application with microservices architecture.
 
@@ -23,7 +23,25 @@ Instagram provides a compelling, real-world example to dissect, understand, and 
 We'll be implementing our application using technologies such as ASP.NET Core, RabbitMQ, and Docker. These tools will allow us to dive into the world of microservices and gain hands-on experience in building and deploying a modern, scalable application.
 
 -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- 
+# Our Plan
 
+## ✅ Done 
+
+- **Version 1.0:** Implemented `UserService` and `NotificationService` services, enabling communication via RabbitMQ message broker.
+- **Version 2.0:** Containerized services using Docker and configured docker-compose for easier deployment.
+- **Version 2.1:** Added HTTPS configuration to enhance the security of our containers.
+
+## 🛠️ In Progress
+
+- **Version 3.0:** Currently working on integrating Kubernetes (k8s) into our project.
+
+## 🌟 To Do
+
+- **API Gateway:** Implement an API gateway for improved service management and routing.
+- **React Web Client:** Develop a React web client to enhance application testing and user experience.
+
+
+-- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- 
 ##  The nature of software
 
 Now, we have no clue about how instagram's team planned and developed their platform throughout the years. and actually, we don't need to, because even if we did, we 
