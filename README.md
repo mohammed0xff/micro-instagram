@@ -2,6 +2,25 @@
 
 Welcome to this (hopefully) collaborative tutorial on microservices. Together, we're going to explore the `why` and the `how` of implementing a web application with microservices architecture.
 
+## Table of contents
+1. [Why a tutorial?](#Why-a-tutorial)
+2. [What are we going to make?](#what-are-we-going-to-make)
+3. [Our plan.](#our-plan)
+4. [The nature of software](#the-nature-of-software)
+5. [The Why.](#the-why)
+6. [The How - Dissecting instagram and identifying key entities.](#the-how---dissecting-instagram-and-identifying-key-entities)
+7. [Comunication between services.](#asking-questions---comunication-between-services)
+<details>
+<summary>7. [Message Bus](#message-bus---rabbitmq)</summary>
+* [RabbitMQ](#message-bus---rabbitmq) 
+* [`User Service` As a publisher](#user-service-as-a-publisher)
+* [`Notification Service` As a consumer](#notification-service-as-a-consumer)
+* [Recapping and asking more questions](#rabbigmq--recapping-and-asking-more-quesions)
+
+</details>
+
+8. [What's next ?](#whats-next-)
+
 ## Why a tutorial? 
 
 I beleive that every open source project should be tutorialized to some extent. and offer insight into the thought processes and decisions that went into creating the software. allowing ourselves to share our ideas, learn from each other's experiences, and even grow from our mistakes. 
@@ -149,7 +168,7 @@ Remember, this is just a starting point. As we get to know more about our applic
 
 -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- 
 
-## The How - Asking quesions
+## Asking Questions - Comunication between services
 
 The very first step in building a microservices architecture is to gain a perspective of the big picture of a fully working application. We have a set of services, each of which is a piece of software responsible for a set of tasks and has its data access. The question we need to ask ourselves is how will these separate services result in a seamless working application? Do they have to communicate?
 
