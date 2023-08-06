@@ -11,15 +11,16 @@ Welcome to this (hopefully) collaborative tutorial on microservices. Together, w
 6. [The How - Dissecting instagram and identifying key entities.](#the-how---dissecting-instagram-and-identifying-key-entities)
 7. [Comunication between services.](#asking-questions---comunication-between-services)
 <details>
-<summary>7. [Message Bus](#message-bus---rabbitmq)</summary>
-* [RabbitMQ](#message-bus---rabbitmq) 
-* [`User Service` As a publisher](#user-service-as-a-publisher)
-* [`Notification Service` As a consumer](#notification-service-as-a-consumer)
-* [Recapping and asking more questions](#rabbigmq--recapping-and-asking-more-quesions)
+<summary>8. Message Bus </summary>
+
+* [RabbitMQ](#message-bus---rabbitmq)
+* [User Service As a publisher](#user-service-as-a-publisher)
+* [Notification Service As a consumer](#notification-service-as-a-consumer)
+* [Recapping and asking more questions](#recapping-and-asking-more-questions)
 
 </details>
 
-8. [What's next ?](#whats-next-)
+9. [What's next ?](#whats-next-)
 
 ## Why a tutorial? 
 
