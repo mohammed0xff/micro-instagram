@@ -10,17 +10,11 @@ Welcome to this (hopefully) collaborative tutorial on microservices. Together, w
 5. [The Why.](#the-why)
 6. [The How - Dissecting instagram and identifying key entities.](#the-how---dissecting-instagram-and-identifying-key-entities)
 7. [Comunication between services.](#asking-questions---comunication-between-services)
-<details>
-<summary>8. Message Bus </summary>
-
-* [RabbitMQ](#message-bus---rabbitmq)
-* [User Service As a publisher](#user-service-as-a-publisher)
-* [Notification Service As a consumer](#notification-service-as-a-consumer)
-* [Recapping and asking more questions](#recapping-and-asking-more-questions)
-
-</details>
-
-9. [What's next ?](#whats-next-)
+8. [RabbitMQ](#message-bus---rabbitmq)
+9. [User Service As a publisher](#user-service-as-a-publisher)
+10. [Notification Service As a consumer](#notification-service-as-a-consumer)
+11. [Recapping and asking more questions](#recapping-and-asking-more-questions)
+12. [What's next ?](#whats-next-)
 
 ## Why a tutorial? 
 
@@ -60,6 +54,8 @@ We'll be implementing our application using technologies such as ASP.NET Core, R
 - **API Gateway:** Implement an API gateway for improved service management and routing.
 - **React Web Client:** Develop a React web client to enhance application testing and user experience.
 
+## ♾️ Always 
+- I'm always working on this text making sure that i expalined things as clear and intuitve as possible, if i made any mistakes please correct them, have any suggestions let me know and if you want to add anything to this project start doing it right away. It's yours!
 
 -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- 
 ##  The nature of software
@@ -206,8 +202,9 @@ So, you can read the message whenever you finish your current task.
 
 And this is basically it that's what rabbit mq is, in a nut shell 
 but what if we have one than more service that want to comunicate ?
+It's going to be very messy, right? which message is going to delivered to whom?
 
-If there are more than two services that need to communicate, that's we they created "Queues" as a centralized and standardized way of exchanging messages. Each service can publish messages to one or more queues, and each consumer can subscribe to the queues it needs to receive messages from. This enables decoupling of producers and consumers, allowing messages to be sent and processed asynchronously.
+That's why they created "Queues" as a centralized and standardized way of exchanging messages. Each service can publish messages to one or more queues, and each consumer can subscribe to the queues it needs to receive messages from. This enables decoupling of producers and consumers, allowing messages to be sent and processed asynchronously.
 
 ### What are queues ?
 
@@ -227,15 +224,16 @@ No, RabbitMQ features a very cool concept which is called "an Exchange" Exchange
 
 #### How to use exchanges and how does they know about the queues that exist ?
 
+Exchanges do not know about the queues that exist. Instead, bindings are used to connect the exchange to specific queues. When a binding is created, it specifies the name of the queue that the exchange should route messages to. The queue must already exist in RabbitMQ for the binding to be created.
+
 First, you need to create an exchange and specify its type. RabbitMQ supports four types of exchanges: direct, fanout, topic, and headers. Each exchange type has different routing rules and is suitable for different use cases.
 
-Once you have created an exchange, you can bind it to one or more queues. This is done by creating a binding between the exchange and the queue. Bindings specify the routing rules for messages to be delivered from the exchange to the queue. When a message is sent to the exchange, RabbitMQ uses the routing rules specified by the bindings to determine which queues the message should be delivered to.
+Once we've created an exchange, you can bind it to one or more queues. This is done by creating a binding between the exchange and the queue. Bindings specify the routing rules for messages to be delivered from the exchange to the queue. When a message is sent to the exchange, RabbitMQ uses the routing rules specified by the bindings to determine which queues the message should be delivered to.
 
-Exchanges do not know about the queues that exist in RabbitMQ. Instead, bindings are used to connect the exchange to specific queues. When a binding is created, it specifies the name of the queue that the exchange should route messages to. The queue must already exist in RabbitMQ for the binding to be created.
 
-#### a Binding ?
+#### A Binding ?
 
-In RabbitMQ, a binding is a link between an exchange and a queue. Bindings define the routing rules for messages to be delivered from the exchange to the queue. When a message is published to an exchange, the exchange uses the bindings to determine which queues the message should be routed to.
+A binding is a link between an exchange and a queue. Bindings define the routing rules for messages to be delivered from the exchange to the queue. When a message is published to an exchange, the exchange uses the bindings to determine which queues the message should be routed to.
 
 Bindings are created using a routing key, which is a string that specifies the routing criteria for a message. The routing key is used by the exchange to decide which queues to deliver the message to. The routing key can be any string, and its format depends on the exchange type.
 
@@ -249,9 +247,9 @@ There are four types of exchanges in RabbitMQ:
 
 4. Headers exchange: Messages are delivered to queues based on a set of header values. The routing key specified in the binding is ignored.
 
-To use bindings in RabbitMQ, you need to create an exchange, create one or more queues, and then create a binding between the exchange and the queue. When creating a binding, you need to specify the routing key and any other options that are specific to the exchange type.
+To use bindings in RabbitMQ, we need to create an exchange, create one or more queues, and then create a binding between the exchange and the queue. When creating a binding, you need to specify the routing key and any other options that are specific to the exchange type.
 
-#### a Routing key ?
+#### The Routing key ?
 
 Routing keys are used by exchanges to determine how to route messages to queues. Routing keys are strings that are included with each message that is published to an exchange. The routing key is used by the exchange to determine which queues the message should be delivered to.
 
@@ -600,7 +598,7 @@ let's celebrate!
 
 -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- --
 
-### RabbigMQ | Recapping and asking more quesions 
+### RabbitMQ | Recapping and asking more quesions 
 
 #### Who is supposed to declare Queues?
 
@@ -610,18 +608,15 @@ this can be useful in scenarios where the subscriber is deployed on a different 
 
 #### Is the consumer aware of all the details? ( the consumer point of view )
 
-from the consumer's perspective in RabbitMQ, the primary concern is the queue from which they receive messages.
-
-In RabbitMQ, messages are not published directly to queues. Instead, the producer sends messages to an exchange. The exchange is then responsible for routing the message to one or more queues based on certain rules. These rules can be configured using bindings and routing keys.
-
-However, a consumer does not need to be aware of these details. all the consumer needs to know is the name of the queue from which it should consume messages. The consumer subscribes to a queue and then processes messages from that queue. It does not need to be aware of which  exchange the messages came from or what routing rules were used to get the message to the queue.
+From the consumer's perspective in RabbitMQ, the primary concern is the queue from which they receive messages.
+It does not need to be aware of these details. all the consumer needs to know is the name of the queue from which it should consume messages. The consumer subscribes to a queue and then processes messages from that queue. It does not need to be aware of which  exchange the messages came from or what routing rules were used to get the message to the queue.
 
 #### If you have any other question please drop it right here or raise an issue about it.
 -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- --
 
 ### What's next ?
 
-So, what's next we said that we are not particularyly intersted in implementing instagram functionalities, we can continue adding more services to this implementation along with the two we currentlly have (User Service and Notification Service), but we are more intersted in using and learning about the why and how of every microservices technology.
+So, what's next we said that we are not particularyly intersted in implementing instagram functionalities, we are giong to add more services to this implementation along with the two we currentlly have (User Service and Notification Service), but leave this for later. Now we are more intersted in using and learning about the why and how of every microservices technology.
 
 Lets list them :
 * Kubernetes - a container orchestration and management platform.
@@ -637,13 +632,12 @@ Consider this image as a reference.
   <img src="https://github.com/mohammed0xff/micro-instagram/blob/master/images/typical-microservice-high-level-view.png" />
 </p>
 
-
-We can continue on improving this code adding those technologies. however, this might be overwhelming for a biginner to look at as a whole.
-So, will gradually create other versions of the application, with each version being one step further from the previous one. We will proceed one step at a time, and each new version will include just one additional feature compared to the previous one. and i will figure out a way so they can be easily navigated between.
+We can continue on improving this code adding those technologies. however, this might be overwhelming for a beginner to look at as a whole.
+So, will gradually create other versions of the application, with each version being one step further from the previous one. We will proceed one step at a time, and each new version will include just one additional feature compared to its predecessor. 
 
 Also this will allow anyone who might decide to tweek this applicatoin in any way or push it towards any side adding some features, doing anything differntly and explaining their point of view. and this would be VERY exciting!
 
-Too much to learn? Dont worry, While always keeping the big picture in your mind, and always asking the `Why` we will never be confused. or allow yourself to be confused. remember, confusion a fundmental part of the learning process! 
+Too much to learn? Dont worry, While always keeping the big picture in your mind, and always asking the `Why` we will never be confused. or allow yourself to be confused. remember, confusion is a fundmental part of the learning process! 
 
 -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- --
 
