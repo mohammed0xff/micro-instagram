@@ -3,18 +3,18 @@
 Welcome to this (hopefully) collaborative tutorial on microservices. Together, we're going to explore the `why` and the `how` of implementing a web application with microservices architecture.
 
 ## Table of contents
-1. [Why a tutorial?](#why-a-tutorial)
-2. [What are we going to make?](#what-are-we-going-to-make)
-3. [Our plan.](#our-plan)
-4. [The nature of software](#the-nature-of-software)
-5. [The Why.](#the-why)
-6. [The How - Dissecting instagram and identifying key entities.](#the-how---dissecting-instagram-and-identifying-key-entities)
-7. [Comunication between services.](#asking-questions---comunication-between-services)
-8. [RabbitMQ](#message-bus---rabbitmq)
-9. [User Service As a publisher](#user-service-as-a-publisher)
-10. [Notification Service As a consumer](#notification-service-as-a-consumer)
-11. [Recapping and asking more questions](#rabbitmq--recapping-and-asking-more-quesions)
-12. [What's next ?](#whats-next-)
+- [Why a tutorial?](#why-a-tutorial)
+- [What are we going to make?](#what-are-we-going-to-make)
+- [Our plan](#our-plan)
+- [The nature of software](#the-nature-of-software)
+- [The Why](#the-why)
+- [The How - Dissecting instagram and identifying key entities.](#the-how---dissecting-instagram-and-identifying-key-entities)
+- [Comunication between services.](#asking-questions---comunication-between-services)
+- [RabbitMQ](#message-bus---rabbitmq)
+  - [User Service As a publisher](#user-service-as-a-publisher)
+  - [Notification Service As a consumer](#notification-service-as-a-consumer)
+  - [Recapping and asking more questions](#rabbitmq--recapping-and-asking-more-quesions)
+- [What's next?](#whats-next-)
 
 ## Why a tutorial? 
 
@@ -32,7 +32,7 @@ So, I encourage you to dive in! Explore the tutorial, play around with the code,
 
 We're going to construct an instagram-like application to understand the principles of microservices and explore modern technologies. However, our focus isn't solely on recreating Instagram's specific functionalities. Instead, we're aiming to learn how to reason about software design.
 
-Instagram provides a compelling, real-world example to dissect, understand, and plan. Throughout this process, we'll attempt to think like software designers, breaking down complex problems and planning their solutions.
+Instagram provides a compelling, real-world example to dissect, understand, and plan. Throughout this process, we'll attempt to think like software architects, breaking down complex problems and planning their solutions.
 
 We'll be implementing our application using technologies such as ASP.NET Core, RabbitMQ, and Docker. These tools will allow us to dive into the world of microservices and gain hands-on experience in building and deploying a modern, scalable application.
 
@@ -91,17 +91,17 @@ Choosing a microservices architecture offers us several key advantages:
 
 4. Faster Time to Market : Microservices can be developed, tested, and deployed independently, enabling faster and more frequent updates and improvements.
 
-5. Single Responsibility : Each microservice has a specific role and fulfills a single business capability. This follows the single responsibility principle where a component of the software should have only one reason to change.
+5. Single Responsibility : Each microservice has a specific role and fulfills a single business capability. This follows the single responsibility principle where a component of the software should have only one reason to change. 
 
-6 Loosely Coupled : Microservices are independent entities. Changes to one service should not require changes in another. This allows teams to work on different services without affecting the work of others.
+6 Loosely Coupled : Microservices are independent entities. Changes to one service should not require changes in another. This allows teams to work on different services without affecting the work of others. 
 
-7 Distributed Development  : Microservices can be developed using different programming languages and can use different data storage technologies.
+7 Distributed Development  : Microservices can be developed using different programming languages and can use different data storage technologies. 
 
-8. Fault Isolation : A failure in one service does not directly affect others. This leads to better fault isolation and resilience.
-
-9. Data Isolation : Each microservice can have its own database, which allows it to be decoupled from other services. This helps to maintain data consistency within the service.
-
-10. Communication : Microservices communicate with each other through well-defined APIs and protocols, often HTTP/REST or asynchronous messaging when using an event-driven architecture.
+8. Fault Isolation : A failure in one service does not directly affect others. This leads to better fault isolation and resilience. 
+ 
+9. Data Isolation : Each microservice can have its own database, which allows it to be decoupled from other services. This helps to maintain data consistency within the service. 
+ 
+10. Communication : Microservices communicate with each other through well-defined APIs and protocols, often HTTP/REST or asynchronous messaging when using an event-driven architecture. 
 
 While a monolithic architecture might seem simpler at first, as the application grows, the complexity can become a significant challenge. With microservices, we can better manage this complexity by breaking down the application into manageable, isolated components.
 
@@ -249,7 +249,7 @@ There are four types of exchanges in RabbitMQ:
 
 To use bindings in RabbitMQ, we need to create an exchange, create one or more queues, and then create a binding between the exchange and the queue. When creating a binding, you need to specify the routing key and any other options that are specific to the exchange type.
 
-#### The Routing key ?
+#### The Routing key?
 
 Routing keys are used by exchanges to determine how to route messages to queues. Routing keys are strings that are included with each message that is published to an exchange. The routing key is used by the exchange to determine which queues the message should be delivered to.
 
@@ -295,18 +295,18 @@ If you have any suggestions for any of them or have a fourth one, please let us 
 Having our base event class like this. Holding attributes like `Id`, `CreationDate` and a virtual field `EventType` to indicate event type
 
 ```cs
-    public abstract class BaseEvent
+public abstract class BaseEvent
+{
+    public BaseEvent()
     {
-        public BaseEvent()
-        {
-            Id = Guid.NewGuid();
-            CreationDate = DateTime.Now;
-        }
-    
-        public Guid Id { get; }
-        public DateTime CreationDate { get; }
-        public virtual Type EventType => typeof(BaseEvent);
+        Id = Guid.NewGuid();
+        CreationDate = DateTime.Now;
     }
+
+    public Guid Id { get; }
+    public DateTime CreationDate { get; }
+    public virtual Type EventType => typeof(BaseEvent);
+}
 ```
 
 Why do we need a base event? 
@@ -314,14 +314,14 @@ because there are basic attributes that every event must contain. By having a ba
 
 And our `FollowCreatedEvent` might look like this. Overriding `EventType` to its type `typeof(FollowBaseEvent)`
 ```cs
-    public class FollowCreatedEvent : BaseEvent
-    {
-        public override Type EventType => typeof( FollowCreatedEvent );
+public class FollowCreatedEvent : BaseEvent
+{
+    public override Type EventType => typeof( FollowCreatedEvent );
 
-        public Guid FollowerId { get; set; }
-        public Guid FollowedId { get; set; }
-        public string FollowerUsername { get; set; }
-    }
+    public Guid FollowerId { get; set; }
+    public Guid FollowedId { get; set; }
+    public string FollowerUsername { get; set; }
+}
 ```
 
 Now listeners can recieve and desericalize the event knowing its type from the field `EventType`
@@ -336,38 +336,38 @@ To accomplish this, you could define a message schema or contract for the `Follo
 Here's an example of what this schema might look like in JSON format:
 
 ```json
-    {
-      "type": "object",
-      "properties": {
-        "id": {
-          "type": "string"
-        },
-        "creationDate": {
-          "type": "string",
-          "format": "date-time"
-        },
-        "eventType": {
-          "type": "string"
-        },
-        "followerId": {
-          "type": "string"
-        },
-        "followedId": {
-          "type": "string"
-        },
-        "followerUsername": {
-          "type": "string"
-        }
-      },
-      "required": [
-        "id",
-        "creationDate",
-        "eventType",
-        "followerId",
-        "followedId",
-        "followerUsername"
-      ]
+{
+  "type": "object",
+  "properties": {
+    "id": {
+      "type": "string"
+    },
+    "creationDate": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "eventType": {
+      "type": "string"
+    },
+    "followerId": {
+      "type": "string"
+    },
+    "followedId": {
+      "type": "string"
+    },
+    "followerUsername": {
+      "type": "string"
     }
+  },
+  "required": [
+    "id",
+    "creationDate",
+    "eventType",
+    "followerId",
+    "followedId",
+    "followerUsername"
+  ]
+}
 ```
 
 When the `User Service` publishes a `FollowCreated` event, it can include the event payload as a JSON object that adheres to this schema. 
@@ -387,107 +387,107 @@ After the exchange is declared, we are going to declare a new queue named `follo
 
 Finally, we are going to bind the `follow-queue` to the `follow_exchange` exchange with the routing key `follow.*`. Binding is the process of connecting a queue to an exchange so that messages can be routed to the queue. In this case, the `follow-queue` will receive messages that have a routing key that starts with `follow.`.
 
-For exampe : routing key wil be like `follow.FollowCreated` , `follow.FollowDeleted` etc. all routed to the queue : `follow-queue`.
+For example : routing key wil be like `follow.FollowCreated` , `follow.FollowDeleted` etc. all routed to the queue : `follow-queue`.
 and the second part of the routing key, the one that follows the dot `FollowCreated`, is for determining the type of the published event, This allows consumers to easily identify event types, which is the second method we discussed in the previous section. which i think is pretty cool.
 
 ```cs
-    public class MessageBusClient : IMessageBusClient
+public class MessageBusClient : IMessageBusClient
+{
+    private readonly IConnection _connection;
+    private readonly IModel _channel;
+    private readonly ILogger<MessageBusClient> _logger;
+
+    public MessageBusClient(
+        IOptions<RabbitMQSettings> rabbitMQSettings, 
+        ILogger<MessageBusClient> logger
+        )
     {
-        private readonly IConnection _connection;
-        private readonly IModel _channel;
-        private readonly ILogger<MessageBusClient> _logger;
-
-        public MessageBusClient(
-            IOptions<RabbitMQSettings> rabbitMQSettings, 
-            ILogger<MessageBusClient> logger
-            )
+        _logger = logger;
+        // create a new connection factory with the settings from the appsettings.json file
+        var factory = new ConnectionFactory()
         {
-            _logger = logger;
-            // create a new connection factory with the settings from the appsettings.json file
-            var factory = new ConnectionFactory()
-            {
-                HostName = rabbitMQSettings.Value.HostName,
-                UserName = rabbitMQSettings.Value.UserName,
-                Password = rabbitMQSettings.Value.Password,
-                Port = rabbitMQSettings.Value.Port
-            };
+            HostName = rabbitMQSettings.Value.HostName,
+            UserName = rabbitMQSettings.Value.UserName,
+            Password = rabbitMQSettings.Value.Password,
+            Port = rabbitMQSettings.Value.Port
+        };
 
-            try
-            {
-              // create a new connection using the connection factory
-                _connection = factory.CreateConnection();
-                _channel = _connection.CreateModel();
+        try
+        {
+          // create a new connection using the connection factory
+            _connection = factory.CreateConnection();
+            _channel = _connection.CreateModel();
 
-                // declare the Follow exchange
-                _channel.ExchangeDeclare(
-                    exchange: "follow_exchange",
-                    type: ExchangeType.Topic
-                    );
+            // declare the Follow exchange
+            _channel.ExchangeDeclare(
+                exchange: "follow_exchange",
+                type: ExchangeType.Topic
+                );
 
-                // declare the Follow queue
-                _channel.QueueDeclare(
-                    queue: "follow-queue",
-                    durable: true,
-                    exclusive: false,
-                    autoDelete: false
-                    );
+            // declare the Follow queue
+            _channel.QueueDeclare(
+                queue: "follow-queue",
+                durable: true,
+                exclusive: false,
+                autoDelete: false
+                );
 
-                // bind the Follow queue to the Follow exchange with the routing key "follow.*"
-                _channel.QueueBind(
-                    queue: "follow-queue",
-                    exchange: "follow_exchange",
-                    routingKey: "follow.*"
-                    );
+            // bind the Follow queue to the Follow exchange with the routing key "follow.*"
+            _channel.QueueBind(
+                queue: "follow-queue",
+                exchange: "follow_exchange",
+                routingKey: "follow.*"
+                );
 
-                logger.LogInformation("Connected to MessageBus");
-            }
-            catch (Exception ex)
-            {
-                logger.LogError ($"Could not connect to the Message Bus: {ex.Message}");
-            }
+            logger.LogInformation("Connected to MessageBus");
         }
-
-        public void PublishFollowEvent(BaseEvent @event)
+        catch (Exception ex)
         {
-            var exchangeName = "follow_exchange";
-            var routingKey = "follow." + @event.GetType().Name;
-
-            PublishEvent(@event, routingKey, exchangeName);
-        }
-
-        private void PublishEvent(BaseEvent @event, string routingKey, string exchangeName)
-        {
-            var options = new JsonSerializerOptions
-            {
-                IncludeFields = true
-            };
-
-            var typedEvent = Convert.ChangeType(@event, @event.GetType());
-            var message = JsonSerializer.Serialize(typedEvent, options);
-
-            if (_connection.IsOpen)
-            {
-                _logger.LogInformation("RabbitMQ connection is open, sending message.");
-                SendMessage(message, exchangeName, routingKey);
-            }
-            else
-            {
-                _logger.LogInformation("RabbitMQ connection is closed.");
-            }
-        }
-
-        private void SendMessage(string message, string exchangeName, string routingKey)
-        {
-            var body = Encoding.UTF8.GetBytes(message);
-
-            _channel.BasicPublish(exchange: exchangeName,
-                                    routingKey: routingKey,
-                                    basicProperties: null,
-                                    body: body);
-
-            _logger.LogInformation($"Message sent successfully, Message: {message}");
+            logger.LogError ($"Could not connect to the Message Bus: {ex.Message}");
         }
     }
+
+    public void PublishFollowEvent(BaseEvent @event)
+    {
+        var exchangeName = "follow_exchange";
+        var routingKey = "follow." + @event.GetType().Name;
+
+        PublishEvent(@event, routingKey, exchangeName);
+    }
+
+    private void PublishEvent(BaseEvent @event, string routingKey, string exchangeName)
+    {
+        var options = new JsonSerializerOptions
+        {
+            IncludeFields = true
+        };
+
+        var typedEvent = Convert.ChangeType(@event, @event.GetType());
+        var message = JsonSerializer.Serialize(typedEvent, options);
+
+        if (_connection.IsOpen)
+        {
+            _logger.LogInformation("RabbitMQ connection is open, sending message.");
+            SendMessage(message, exchangeName, routingKey);
+        }
+        else
+        {
+            _logger.LogInformation("RabbitMQ connection is closed.");
+        }
+    }
+
+    private void SendMessage(string message, string exchangeName, string routingKey)
+    {
+        var body = Encoding.UTF8.GetBytes(message);
+
+        _channel.BasicPublish(exchange: exchangeName,
+                                routingKey: routingKey,
+                                basicProperties: null,
+                                body: body);
+
+        _logger.LogInformation($"Message sent successfully, Message: {message}");
+    }
+}
 
 ```
 
@@ -499,98 +499,98 @@ As a consumer that must be always be listening for any incomming messages we can
 from the definition :  ` The BackgroundService class implements the IHostedService interface and provides a simple framework for creating a background task that can be started and stopped by the application's IHost implementation. It handles the lifecycle management of the background task, including starting and stopping it when the application is started or stopped.`
 
 ```cs
-    public class MessageBusSubscriber : BackgroundService
+public class MessageBusSubscriber : BackgroundService
+{
+    private readonly ILogger<MessageBusSubscriber> _logger;
+    private readonly IEventProcessor _eventProcessor;
+    private IConnection _connection;
+    private IModel _channel;
+
+    public MessageBusSubscriber(
+        IOptions<RabbitMQSettings> rabbitMQSettings,
+        IEventProcessor eventProcessor,
+        ILogger<MessageBusSubscriber> logger)
     {
-        private readonly ILogger<MessageBusSubscriber> _logger;
-        private readonly IEventProcessor _eventProcessor;
-        private IConnection _connection;
-        private IModel _channel;
+        _logger = logger;
+        _eventProcessor = eventProcessor;
 
-        public MessageBusSubscriber(
-            IOptions<RabbitMQSettings> rabbitMQSettings,
-            IEventProcessor eventProcessor,
-            ILogger<MessageBusSubscriber> logger)
+        var factory = new ConnectionFactory()
         {
-            _logger = logger;
-            _eventProcessor = eventProcessor;
+            HostName = rabbitMQSettings.Value.HostName,
+            UserName = rabbitMQSettings.Value.UserName,
+            Password = rabbitMQSettings.Value.Password,
+            Port = rabbitMQSettings.Value.Port
+        };
 
-            var factory = new ConnectionFactory()
-            {
-                HostName = rabbitMQSettings.Value.HostName,
-                UserName = rabbitMQSettings.Value.UserName,
-                Password = rabbitMQSettings.Value.Password,
-                Port = rabbitMQSettings.Value.Port
-            };
+        try
+        {
+            _connection = factory.CreateConnection();
+            _channel = _connection.CreateModel();
 
-            try
-            {
-                _connection = factory.CreateConnection();
-                _channel = _connection.CreateModel();
+            _logger.LogInformation("Listening on the Message Bus");
 
-                _logger.LogInformation("Listening on the Message Bus");
-
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError($"Could not connect to the Message Bus: {ex.Message}");
-            }
         }
-
-        // This method is called when the IHostedService starts.
-        protected override Task ExecuteAsync(CancellationToken stoppingToken)
+        catch (Exception ex)
         {
-            try
-            {
-                stoppingToken.ThrowIfCancellationRequested();
-
-                var consumer = new EventingBasicConsumer(_channel);
-                consumer.Received += HandleReceivedEvent!;
-
-                // Consume from follow-queue
-                _channel.BasicConsume(queue: "follow-queue", autoAck: true, consumer: consumer);
-
-            }catch(Exception ex)
-            {
-                _logger.LogError($"Error on starting MessageBusSubscriber service {ex.Message}");
-            }
-
-            return Task.CompletedTask;
-        }
-
-        private void HandleReceivedEvent(object ModuleHandle, BasicDeliverEventArgs ea)
-        {
-            try
-            {
-                _logger.LogInformation("Event message was received");
-
-                var body = ea.Body;
-                var eventMessage = Encoding.UTF8.GetString(body.ToArray());
-
-                // DeserializeEvent function that we are going to implement
-                // should return an event deserialized to its type after determining its type
-                // with the help of routing key as we talked earlier.
-                var @event = (BaseEvent)DeserializeEvent(eventMessage, ea.RoutingKey);
-
-                _eventProcessor.ProcessEvent(@event);
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError($"Error on processing received message {ex.Message}");
-            }
+            _logger.LogError($"Could not connect to the Message Bus: {ex.Message}");
         }
     }
+
+    // This method is called when the IHostedService starts.
+    protected override Task ExecuteAsync(CancellationToken stoppingToken)
+    {
+        try
+        {
+            stoppingToken.ThrowIfCancellationRequested();
+
+            var consumer = new EventingBasicConsumer(_channel);
+            consumer.Received += HandleReceivedEvent!;
+
+            // Consume from follow-queue
+            _channel.BasicConsume(queue: "follow-queue", autoAck: true, consumer: consumer);
+
+        }catch(Exception ex)
+        {
+            _logger.LogError($"Error on starting MessageBusSubscriber service {ex.Message}");
+        }
+
+        return Task.CompletedTask;
+    }
+
+    private void HandleReceivedEvent(object ModuleHandle, BasicDeliverEventArgs ea)
+    {
+        try
+        {
+            _logger.LogInformation("Event message was received");
+
+            var body = ea.Body;
+            var eventMessage = Encoding.UTF8.GetString(body.ToArray());
+
+            // DeserializeEvent function that we are going to implement
+            // should return an event deserialized to its type after determining its type
+            // with the help of routing key as we talked earlier.
+            var @event = (BaseEvent)DeserializeEvent(eventMessage, ea.RoutingKey);
+
+            _eventProcessor.ProcessEvent(@event);
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError($"Error on processing received message {ex.Message}");
+        }
+    }
+}
 
 ```
 
 - As we did with our publisher we are going to create a connection. then we are going to tell RabbitMQ what queues we are interested in.
 
 ```cs
-      _channel.BasicConsume(queue: "follow-queue", autoAck: true, consumer: consumer);
+_channel.BasicConsume(queue: "follow-queue", autoAck: true, consumer: consumer);
 ```   
 - And we can add it to the service collection as a `HostedService` that start running as soon as the service does.
 
 ```cs
-      builder.Services.AddHostedService<MessageBusSubscriber>();
+builder.Services.AddHostedService<MessageBusSubscriber>();
 ```
 
 Now we have two services one publishing events and the other is listening and conuming those events! <br/>
@@ -619,11 +619,11 @@ It does not need to be aware of these details. all the consumer needs to know is
 So, what's next we said that we are not particularyly intersted in implementing instagram functionalities, we are giong to add more services to this implementation along with the two we currentlly have (User Service and Notification Service), but leave this for later. Now we are more intersted in using and learning about the why and how of every microservices technology.
 
 Lets list them :
-* Kubernetes - a container orchestration and management platform.
 * Docker - a containerization technology.
-* Docker-compose - Tool for defining and running multi-container Docker applications.
-* gRPC - high performance Remote Procedure Call (RPC) framework that can run in any environment.
+* Docker-compose - a tool for defining and running multi-container Docker applications.
+* Kubernetes - a container orchestration and management platform.
 * API Gateway - Middleware that acts as a gateway between clients and backend services, providing authentication, rate limiting, and other functionalities.
+* gRPC - high performance Remote Procedure Call (RPC) framework that can run in any environment.
 * HAProxy - Load balancer and proxy server for TCP/HTTP-based applications.
 
 Consider this image as a reference.
@@ -638,7 +638,5 @@ So, will gradually create other versions of the application, with each version b
 Also this will allow anyone who might decide to tweek this applicatoin in any way or push it towards any side adding some features, doing anything differntly and explaining their point of view. and this would be VERY exciting!
 
 Too much to learn? Dont worry, While always keeping the big picture in your mind, and always asking the `Why` we will never be confused. or allow yourself to be confused. remember, confusion is a fundmental part of the learning process! 
-
--- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- --
 
 
