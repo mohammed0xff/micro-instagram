@@ -3,7 +3,7 @@
 Welcome to this (hopefully) collaborative tutorial on microservices. Together, we're going to explore the `why` and the `how` of implementing a web application with microservices architecture.
 
 ## Table of contents
-1. [Why a tutorial?](#Why-a-tutorial)
+1. [Why a tutorial?](#why-a-tutorial)
 2. [What are we going to make?](#what-are-we-going-to-make)
 3. [Our plan.](#our-plan)
 4. [The nature of software](#the-nature-of-software)
@@ -13,7 +13,7 @@ Welcome to this (hopefully) collaborative tutorial on microservices. Together, w
 8. [RabbitMQ](#message-bus---rabbitmq)
 9. [User Service As a publisher](#user-service-as-a-publisher)
 10. [Notification Service As a consumer](#notification-service-as-a-consumer)
-11. [Recapping and asking more questions](#recapping-and-asking-more-questions)
+11. [Recapping and asking more questions](#rabbitmq--recapping-and-asking-more-quesions)
 12. [What's next ?](#whats-next-)
 
 ## Why a tutorial? 
