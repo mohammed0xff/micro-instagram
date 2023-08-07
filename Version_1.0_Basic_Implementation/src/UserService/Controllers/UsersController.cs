@@ -151,9 +151,9 @@ namespace UserService.Controllers
             }
         }
 
-        [HttpPost]
+        [HttpGet]
         [Route("{username}/followers")]
-        [ProducesResponseType(typeof(User), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(List<UserResponse>), StatusCodes.Status200OK)]
         public async Task<IActionResult> Followers([FromRoute] string username)
         {
             try
@@ -167,9 +167,9 @@ namespace UserService.Controllers
             }
         }
 
-        [HttpPost]
+        [HttpGet]
         [Route("{username}/following")]
-        [ProducesResponseType(typeof(User), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(List<UserResponse>), StatusCodes.Status200OK)]
         public async Task<IActionResult> Following([FromRoute] string username)
         {
             try
