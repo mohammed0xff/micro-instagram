@@ -93,9 +93,9 @@ Choosing a microservices architecture offers us several key advantages:
 
 5. Single Responsibility : Each microservice has a specific role and fulfills a single business capability. This follows the single responsibility principle where a component of the software should have only one reason to change. 
 
-6 Loosely Coupled : Microservices are independent entities. Changes to one service should not require changes in another. This allows teams to work on different services without affecting the work of others. 
+6. Loosely Coupled : Microservices are independent entities. Changes to one service should not require changes in another. This allows teams to work on different services without affecting the work of others. 
 
-7 Distributed Development  : Microservices can be developed using different programming languages and can use different data storage technologies. 
+7. Distributed Development  : Microservices can be developed using different programming languages and can use different data storage technologies. 
 
 8. Fault Isolation : A failure in one service does not directly affect others. This leads to better fault isolation and resilience. 
  
