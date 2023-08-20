@@ -1,0 +1,42 @@
+apiVersion: apps/v1
+
+kind: Deployment
+metadata:
+  name: notification-service
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: notification-service
+  template:
+    metadata:
+      labels:
+        app: notification-service
+    spec:
+      containers:
+        - name: notification-service
+          image: notification_service:local
+          ports:
+            - containerPort: 7000
+            - containerPort: 7001
+          volumeMounts:
+            - name: aspnet-https
+              mountPath: /https
+          env:
+            - name: ASPNETCORE_ENVIRONMENT
+              value: Production
+            - name: ASPNETCORE_URLS
+              value: "https://+:7001;http://+:7000"
+            - name: ASPNETCORE_HTTPS_PORT
+              value: "7001"
+            - name: ASPNETCORE_Kestrel__Certificates__Default__Password
+              valueFrom:
+                secretKeyRef:
+                  name: aspnet-https
+                  key: cert-password
+            - name: ASPNETCORE_Kestrel__Certificates__Default__Path
+              value: /https/cert.pfx
+      volumes:
+        - name: aspnet-https
+          secret:
+            secretName: aspnet-https
