@@ -1,0 +1,42 @@
+apiVersion: apps/v1
+
+kind: Deployment
+metadata:
+  name: user-service
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: user-service
+  template:
+    metadata:
+      labels:
+        app: user-service
+    spec:
+      containers:
+        - name: user-service
+          image: user_service:local
+          ports:
+            - containerPort: 8000
+            - containerPort: 8001
+          volumeMounts:
+            - name: aspnet-https
+              mountPath: /https
+          env:
+            - name: ASPNETCORE_ENVIRONMENT
+              value: Production
+            - name: ASPNETCORE_URLS
+              value: "https://+:8001;http://+:8000"
+            - name: ASPNETCORE_HTTPS_PORT
+              value: "8001"
+            - name: ASPNETCORE_Kestrel__Certificates__Default__Password
+              valueFrom:
+                secretKeyRef:
+                  name: aspnet-https
+                  key: cert-password
+            - name: ASPNETCORE_Kestrel__Certificates__Default__Path
+              value: /https/cert.pfx
+      volumes:
+        - name: aspnet-https
+          secret:
+            secretName: aspnet-https
