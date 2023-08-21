@@ -4,36 +4,7 @@ networks:
   app-network:
     driver: bridge
 
-
 services:
-
-  # RabbitMQ
-  rabbitmq:
-    image: rabbitmq:3.9-management-alpine
-    ports:
-      - "5672:5672"
-      - "15672:15672"
-    environment:
-      RABBITMQ_DEFAULT_USER: "guest"
-      RABBITMQ_DEFAULT_PASS: "guest"
-    networks:
-      - app-network
-
-  # SQL Server
-  sqlserver:
-    image: mcr.microsoft.com/mssql/server:2017-latest 
-    container_name: sqlserver
-    hostname: mssql
-    cap_add: [ 'SYS_PTRACE' ]
-    restart: always
-    ports:
-      - 1433:1433
-    environment:
-      - ACCEPT_EULA=Y
-      - SA_PASSWORD=hP75#q3q
-    networks:
-      - app-network
-
   # Services  
 
   user_service:
@@ -45,9 +16,6 @@ services:
     ports:
       - "8000:8000"
       - "8001:8001"
-    depends_on:
-      - rabbitmq
-      - sqlserver
     networks:
       - app-network
 
@@ -60,9 +28,5 @@ services:
     ports:
       - "7000:7000"
       - "7001:7001"
-    depends_on:
-      - rabbitmq
-      - sqlserver
-      - user_service
     networks:
       - app-network
