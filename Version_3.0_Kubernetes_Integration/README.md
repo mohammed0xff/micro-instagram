@@ -1,5 +1,4 @@
-﻿# How to run
-[](/README.How-To-Run.md)
+﻿# [How to run](https://github.com/mohammed0xff/micro-instagram/blob/master/Version_3.0_Kubernetes_Integration/README-How-To-Run.md)
 
 # Intorduction
  
@@ -119,7 +118,7 @@ In summary, services provide a way to expose applications within a cluster and m
 to other services or external users. 
 They offer a stable network endpoint that can be used to access the underlying pods running the application.
 
-### Up one level ( cluster ) 
+### Up one level ( Cluster ) 
 
 Think of a Kubernetes cluster as a group of computers, either physical or virtual, 
 that work together to run our applications. It's like a team of machines collaborating 
@@ -173,7 +172,7 @@ What state we need our application to be at that k8s will keen on maintaining, e
 I encourage you to revisit the previous sections after you finish the whole file and checkout 
 the provided links at the end, hope this will be helpful too.
 
-[here](comming)
+# [Here](https://github.com/mohammed0xff/micro-instagram/blob/master/Version_3.0_Kubernetes_Integration/README-2.md)
 
 
 
