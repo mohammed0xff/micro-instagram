@@ -1,5 +1,5 @@
 # How to use Kubernetes?
-To use k8s we need to tell it what state we need our application in  
+To use k8s we need to specify to it the desired state for our application to run at.
 
 ### an example on a "state"
 Imaine we have two services :
@@ -20,7 +20,8 @@ We can tell k8s exactly what state that we want our app in and it will do its be
 
 ## How to comunicate this to k8s?
 A yaml file? you guessed it!
-Yes, we are going to define our <>
+Yes, we are going to define our services, the desired state for each of them and networking to allow them to comunicate 
+with each other and for us to be able to access them.
 
 #### First off we need a deployment resource file
 With a deployment to each service we can ensure that each service has its own dedicated pod
@@ -53,8 +54,12 @@ spec:
           ports:
             - containerPort: 8000
             - containerPort: 8001
+           env:
+             - name: ASPNETCORE_ENVIRONMENT
+               value: Production
 
 ```
+I removed some details for example simplicity view [original](https://github.com/mohammed0xff/micro-instagram/blob/master/Version_3.0_Kubernetes_Integration/k8s/user-service/user-service-deployment.yml)
 
 And in the `spec` section we describes the desired state of the deployment.
 
@@ -145,12 +150,7 @@ spec:
       protocol: TCP
       port: 8001
       targetPort: 8001
-  env:
-    - name: ASPNETCORE_ENVIRONMENT
-      value: Production
 ```
-
-I removed some details for example simplicity view [original](https://github.com/mohammed0xff/micro-instagram/blob/master/Version_3.0_Kubernetes_Integration/k8s/user-service/user-service-deployment.yml)
 
 apply it with `kubectl apply -f our-user-service.yaml`
 
@@ -176,10 +176,10 @@ You are right. we are one step from having that.
 
 ## We need to make our service accessable from the outside of the cluster
 how to do that?
-We have two options - there are more but we are going to examine two rn -
+We have three options - there are more but we are going to examine three rn -
 
 ### 1. Ingress: 
-An Ingress is an API object that manages external access to the services within a cluster. 
+Ingress is an API object that manages external access to the services within a cluster. 
 It acts as a reverse proxy and provides features like SSL termination, path-based routing, and more. 
 We would need to set up an Ingress controller (e.g. Nginx Ingress Controller) and configure an Ingress resource to route traffic from our local machine to the Service.
 Additionally, we would need to set up DNS or add an entry to our local machine's hosts file to map the desired domain name to the Ingress IP.
@@ -201,7 +201,7 @@ kubectl port-forward service/user-service 8001:80
 
 
 We are using the second option at this point, we are going to setup ingress in the next versions when we add our api gateway 
-But a NodePort now is very suitable. it's complicated enough already.
+But a NodePort now is very suitable. Let's keep things simple.
 
 ### How to make a node port to forward traffic from outside the cluster that port to the Service's targetPort?
 
@@ -239,14 +239,20 @@ HTTP traffic will be forwarded to port 8000 on the pods, and HTTPS traffic will 
 
 - `nodePort`. specifies the port number on each node in the cluster that traffic will be forwarded to. 
 In this example, for HTTP traffic, incoming requests on port 38000 of any node will be forwarded to the service, 
-and for HTTPS traffic, requests on port 38001 will be forwarded.
+and for HTTPS traffic, requests on port `38001` will be forwarded.
+
+Here is a diagram to help you visualize what's going on:
+
+<p align="center">
+  <img src="https://github.com/mohammed0xff/micro-instagram/blob/master/images/nodeport-mapping.png" />
+</p>
 
 And now we can access our service through `https://localhost:38001/swagger/index.html`
 lets celeprate 🎉🎉
 
 ## Conclusion
 
-In this file we expalined how to :  
+In this file we expalined how to :   
 - Create a deployment
 - Set up a service configuration for it
 - and finnaly map this service to to a port outside the node 
@@ -292,7 +298,7 @@ As we are reaching the sqlserver ""service"" from inside the node.
 
 Next version we are going to set up an api gatway that will act as an entry point for API calls and represent client requests to target services!
 
-![](https://i.imgflip.com/5lwx14.jpg)
+![](https://i.pinimg.com/originals/74/d3/f3/74d3f3e8f2a52fc9a05dee27d81e6702.jpg)
 
 
 
