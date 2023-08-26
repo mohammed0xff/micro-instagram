@@ -172,7 +172,19 @@ What state we need our application to be at that k8s will keen on maintaining, e
 I encourage you to revisit the previous sections after you finish the whole file and checkout 
 the provided links at the end, hope this will be helpful too.
 
-# [Here](https://github.com/mohammed0xff/micro-instagram/blob/master/Version_3.0_Kubernetes_Integration/README-2.md)
+# [🌟Implementation](https://github.com/mohammed0xff/micro-instagram/blob/master/Version_3.0_Kubernetes_Integration/README-2.md)
+
+-- -- -- 
+## Further Readings (stuff i found useful)
+
+- [Kubernetes Concepts and Architecture](https://platform9.com/blog/kubernetes-enterprise-chapter-2-kubernetes-architecture-concepts/)
+- [Understanding Kubernetes Architecture with Diagrams](https://phoenixnap.com/kb/understanding-kubernetes-architecture-diagrams)
+- [Andrew Lock's Introduction to Kubernetes](https://andrewlock.net/deploying-asp-net-core-applications-to-kubernetes-part-1-an-introduction-to-kubernetes)
+- [Bruno Terkaly's ASP.NET Applications (Core) in Kubernetes](https://bterkaly.medium.com/running-asp-net-applications-in-kubernetes-a-detailed-step-by-step-approach-96c98f273d1a)
+
+
+
+
 
 
 
